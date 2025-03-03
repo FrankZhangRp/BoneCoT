@@ -1,0 +1,37 @@
+data:
+  train_dataset: /path/txt # train.txt path here
+  val_dataset: /path/txt # val.txt path here
+  test_dataset: /path/txt # test.txt path here
+  batch_size: 96
+  num_workers: 8
+  o1_extra_feature_dim: 15
+crops:
+  global_crops_size: 518
+model:
+  n_last_blocks_list: [1, 4]
+  num_classes: 1
+  use_n_blocks: 4
+  use_avgpool: true
+  pretrained_weights: ""
+  checkpoint_path: ""
+optim:
+  loss_type: BCE
+  focal_loss_alpha: 0.25
+  focal_loss_gamma: 2.0
+  step_per_epoch: 100
+  epochs: 15
+  optimizer: sgd
+  sgd_momentum: 0.9
+  lr_scheduler: cosine
+  weight_decay: 5e-4
+  lr: 1e-4
+  backbone_lr: 1e-4
+  warmup_epochs: 0
+  min_lr: 1.0e-06
+  clip_grad: 3.0
+  patch_embed_lr_mult: 0.2
+  layerwise_decay: 1.0
+  adamw_beta1: 0.9
+  adamw_beta2: 0.999
+trainer: TrainerClassNameHere
+
