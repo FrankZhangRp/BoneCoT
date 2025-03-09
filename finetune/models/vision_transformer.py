@@ -1,26 +1,10 @@
-
-
-
-
-
-# Copyright (c) Meta Platforms, Inc. and affiliates.
-#
-# This source code is licensed under the Apache License, Version 2.0
-# found in the LICENSE file in the root directory of this source tree.
-
-# References:
-#   https://github.com/facebookresearch/dino/blob/main/vision_transformer.py
-#   https://github.com/rwightman/pytorch-image-models/tree/master/timm/models/vision_transformer.py
 import os
 import sys
 
-# 获取当前脚本所在的文件夹路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# 获取上一层文件夹路径
 parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
 
-# 将上一层文件夹路径添加到 sys.path
 sys.path.append(parent_dir)
 
 

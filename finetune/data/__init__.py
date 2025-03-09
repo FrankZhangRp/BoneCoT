@@ -1,3 +1,3 @@
 from .base_dataset import BasicClassificationDataset
 from .series_dataset import SeriesClassificationDataset
-from .o1_dataset import O1ClassificationDataset
+from .bonecot_dataset import BoneCoT_Inference_Dataset

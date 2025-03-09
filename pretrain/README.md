@@ -1,19 +1,19 @@
-# BoneFM pre-training code
+## BoneFM pre-training code
 
 This repository implements DINOv2 pre-training based on the DINOv2 patch repository.
 
-## Key Features
+### Key Features
 - Configuration files are located in the `configs` directory
 - Custom `WBCTdataset` implementation in `data/datasets/wbct_dataset.py`
 - Compatible with the latest PyTorch versions (>2.1)
 
-## About the following content
+### About the following content
 
 The following content consists of two parts:
 1. DINOv2 patch - This section explains how to use the patch to make DINOv2 compatible with the latest versions of PyTorch (>2.1), including environment setup, installation steps, and training commands.
 2. DINOv2 original repository README.md - This section contains the content from the original DINOv2 repository README, introducing basic information about the DINOv2 model, paper links, author information, and the main features and functions of the model.
 
-# DINOv2 patch
+## DINOv2 patch
 
 This is a patch for the original repository to make it work with the latest version of PyTorch (>2.1).
 
@@ -42,7 +42,7 @@ Thanks a lot to https://github.com/csaroff/dinov2 for an example of custom datas
 
 :new: [2023-10-26] *Added DINOv2 backbones with registers, following [Vision Transformers Need Registers](https://arxiv.org/abs/2309.16588).*
 
-# DINOv2: Learning Robust Visual Features without Supervision
+## DINOv2: Learning Robust Visual Features without Supervision
 
 **[Meta AI Research, FAIR](https://ai.facebook.com/research/)**
 

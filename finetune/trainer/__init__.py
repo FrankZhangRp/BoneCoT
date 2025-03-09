@@ -1,7 +1,5 @@
 from .base_trainer import BaseTrainer
-from .knn_trainer import KNNTrainer
-from .finetune_linear_trainer import FinetuneLinearTrainer, FinetuneSingleLinearTrainer
-from .ctclip_trainer import CTCLIP_Trainer, CTCLIP_Eval_Trainer
-from .o1_finetune_linear_trainer import O1FinetuneLinearTrainer, O1FinetuneSingleLinearTrainer
-from .o1_eval_trainer import O1EvalTrainer
-from .eval_trainer import EvalLinearTrainer, EvalO1LinearTrainer
+from .bonefm_finetune_trainer import BoneFM_Finetune_Trainer
+from .bonefm_eval_trainer import BoneFM_Eval_Trainer
+from .bonecot_finetune_trainer import BoneCoT_Finetune_Trainer
+from .bonecot_eval_trainer import BoneCoT_Eval_Trainer

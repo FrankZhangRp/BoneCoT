@@ -1,11 +1,10 @@
 data:
-  train_dataset: /path/txt # train.txt path here
-  val_dataset: /path/txt # val.txt path here
-  test_dataset: /path/txt # test.txt path here
-  batch_size: 384
+  train_dataset: finetune/data/eval_demo_data/labels/eval.csv # train.csv path here
+  val_dataset: finetune/data/eval_demo_data/labels/eval.csv # val.csv path here
+  test_dataset: finetune/data/eval_demo_data/labels/eval.csv # test.csv path here
+  batch_size: 16
   num_workers: 16
-  o1_extra_feature_dim: 16
-  o1_fold_num: 4
+  bonecot_extra_feature_dim: 16
 crops:
   global_crops_size: 518
 model:
@@ -14,27 +13,27 @@ model:
   use_n_blocks: 4
   use_avgpool: true
   pretrained_weights: ""
+  cot_relative_model_dict:
+    bone_lesion: '/path/to/checkpoints/bone_lesion.pth'
+    benign_malignant: '/path/to/checkpoints/benign_malignant.pth'
+    primary_metastatic: '/path/to/checkpoints/primary_metastasis.pth'
+    osteoblastic: '/path/to/checkpoints/osteoblastic.pth'
+    osteolytic: '/path/to/checkpoints/osteolytic.pth'
+    spinal_cord_compression: '/path/to/checkpoints/spinal_cord_compression.pth'
+    thrombosis: '/path/to/checkpoints/thrombosis.pth'
+    pathological_fracture: '/path/to/checkpoints/pathological_fracture.pth'
+    type_of_primary_tumor: '/path/to/checkpoints/type_of_primary_tumor.pth'
+    hypercalcemia: '/path/to/checkpoints/hypercalcemia.pth'
+    lung_SCLC_or_NSCLC: '/path/to/checkpoints/lung_SCLC_or_NSCLC.pth'
+    lung_EGFR: '/path/to/checkpoints/lung_EGFR.pth'
+    lung_ROS1: '/path/to/checkpoints/lung_ROS1.pth'
+    lung_ALK: '/path/to/checkpoints/lung_ALK.pth'
+    breast_ER: '/path/to/checkpoints/breast_ER.pth'
+    breast_PR: '/path/to/checkpoints/breast_PR.pth'
+    breast_HER2: '/path/to/checkpoints/breast_HER2.pth'
+    breast_AR: '/path/to/checkpoints/breast_AR.pth'
+    renal_insufficiency: '/path/to/checkpoints/renal_insufficiency.pth'
 optim:
-  loss_type: BCE
-  focal_loss_alpha: 0.25
-  focal_loss_gamma: 2.0
-  step_per_epoch: 1000
-  o1_change01: false
-  o1_label_smooth: 0.0
-  o1_dropout: 0.0
   epochs: 3
-  optimizer: sgd
-  sgd_momentum: 0.9
-  lr_scheduler: cosine
-  weight_decay: 5e-4
-  lr: 1e-3
-  backbone_lr: 1e-4
-  warmup_epochs: 0
-  min_lr: 1.0e-06
-  clip_grad: 3.0
-  patch_embed_lr_mult: 0.2
-  layerwise_decay: 1.0
-  adamw_beta1: 0.9
-  adamw_beta2: 0.999
-trainer: O1EvalTrainer
+trainer: BoneCoT_Inference_Trainer
 

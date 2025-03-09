@@ -4,7 +4,7 @@ data:
   test_dataset: ".txt"
   batch_size: 128
   num_workers: 16
-  o1_extra_feature_dim: 34
+  bonecot_extra_feature_dim: 34
 compute_precision:
   grad_scaler: true
   teacher:
@@ -49,9 +49,9 @@ model:
 optim:
   epochs: 100
   step_per_epoch: -1
-  o1_change01: False
-  o1_label_smooth: 0
-  o1_dropout: 0
+  bonecot_change01: False
+  bonecot_label_smooth: 0
+  bonecot_dropout: 0
   use_amp: true # 使用半精度
   optimizer: adamw # adamw sgd
   sgd_momentum: 0.9

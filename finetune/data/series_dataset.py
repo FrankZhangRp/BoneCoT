@@ -1,5 +1,5 @@
 import os
-from data.base_dataset import BasicClassificationDataset
+from ..data.base_dataset import BasicClassificationDataset
 
 
 class SeriesClassificationDataset(BasicClassificationDataset):

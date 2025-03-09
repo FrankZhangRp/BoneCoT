@@ -1,41 +1,90 @@
-# Anonymous Repository for BoneFM and BoneCoT
+## BoneCoT: Multi-center Validation of a whole-body skeleton foundation model for bone metastases prediction using oncologist-derived chain of thought
 
-This repository contains the implementation of BoneFM and BoneCoT for bone image analysis. The code is organized into two main folders:
+This is the official repo for "BoneCoT: Multi-center Validation of a whole-body skeleton foundation model for bone metastases prediction using oncologist-derived chain of thought". This repository includes code for BoneFM, which uses CT images to pretrain a ViT-14/g model based on DINOv2 methodology, as well as code for the fine-tuning phase, which covers both direct fine-tuning of BoneFM and the BoneCoT fine-tuning approach.
 
-## Repository Structure
 
-- `pretrain/`: Official BoneFM pretraining code based on DINOv2
-- `finetune/`: Code for fine-tuning and testing BoneFM and BoneCoT models
+### Repository Structure
 
-## Pretrain
+This repository is divided into two main parts:
 
-The `pretrain` folder contains the official BoneFM pretraining code based on DINOv2. We made simple modifications to the dataset part and implemented the code using PyTorch version > 2.1 with dinov2-patch.
+1. **Pre-training**: The `BoneCoT/pretrain` directory contains the official BoneFM pretraining code based on DINOv2. We made simple modifications to the dataset part and implemented the code using PyTorch version > 2.1 with dinov2-patch.
 
-### Requirements
+2. **Fine-tuning**: The `BoneCoT/finetune` directory includes code for fine-tuning and testing BoneFM and BoneCoT models. This section contains training scripts, evaluation tools, and configuration files for both direct fine-tuning and the BoneCoT approach.
 
-- PyTorch > 2.1
-- DINOv2 dependencies
+### 🔧 Install Environment
 
-## Finetune
+1. **Create environment with conda:**
 
-The `finetune` folder contains code for fine-tuning and testing both BoneFM and BoneCoT models.
+    ```sh
+    conda create -n bonecot python=3.9 -y
+    conda activate bonecot
+    ```
 
-### Data Format
+2. **Download repo:**
 
-- **BoneFM**: Accepts labels in either `.txt` or `.csv` format
-- **BoneCoT**: Requires labels in `.csv` format with the following structure:
-  - First column: `image_path` - Path to the image file
-  - Second column: `label` - Main task label
-  - Subsequent columns: Additional task-related labels/features
+    ```sh
+    # Download and unzip from anonymous repository (temporary link before publication)
+    wget https://anonymous.4open.science/r/BoneCoT-4DCF/download -O BoneCoT-4DCF.zip
+    unzip BoneCoT-4DCF.zip
+    cd BoneCoT-4DCF
+    ```
 
-### Configuration
+    Note: After paper acceptance, the code will be publicly available on GitHub.
 
-Example configuration files are provided in the `finetune/configs/` directory:
-- `finetune.yaml`: Basic fine-tuning configuration
-- `bonecot_eval.yaml`: Configuration for BoneCoT evaluation
+3. **Install PyTorch and CUDA:**
 
-### Usage
+    - To install PyTorch via conda:
 
-1. Prepare your dataset according to the required format
-2. Configure the appropriate YAML file with your dataset paths and training parameters
-3. Run the training/evaluation scripts
+        ```sh
+        conda install pytorch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 pytorch-cuda=12.4 -c pytorch -c nvidia
+        ```
+
+    - To install PyTorch via pip:
+
+        ```sh
+        pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124
+        ```
+
+4. **Install additional dependencies:**
+
+    ```sh
+    pip install -r requirement.txt
+    ```
+
+5. **[Optional] Install DINOv2 pre-training environment:**
+
+    If you want to run DINOv2 pre-training, follow these additional steps:
+
+    ```sh
+    # Create a new conda environment for DINOv2
+    conda env create -f pretrain/conda.yaml
+    conda activate dinov2_new
+
+    # Install DINOv2 package
+    cd pretrain
+    pip install -e .
+    ```
+
+    Note: This step is only required if you plan to run DINOv2 pre-training. For using pre-trained models or fine-tuning, the main environment (bonecot) is sufficient.
+
+Following the above step, you should have all the necessary dependencies installed for all three parts of the repository.
+
+
+### Assets, checkpoints and Data preparation
+We introduce how to prepare the data, model weights and assets for pre-training, fine-tuning and inference.
+
+
+### 🌱Play with `BoneCoT_inference.ipynb`
+In the notebook `BoneCoT_inference.ipynb`, we provide a minimal example demonstrating how to use BoneCoT for CT image diagnosis. The notebook covers:
+
+1. Loading configuration of BoneCoT
+2. Running inference with BoneCoT
+3. Interpreting the model's predictions for:
+   - Bone lesion detection
+   - Benign or malignant 
+   - Primary or metastatic
+   - Specific tumor characteristics (osteoblastic/osteolytic)
+   - Complications (spinal cord compression, pathological fracture, etc.)
+   - ...
+
+The notebook provides step-by-step guidance with example code to help you get started with BoneCoT inference.
