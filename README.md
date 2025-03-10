@@ -73,6 +73,30 @@ Following the above step, you should have all the necessary dependencies install
 ### Assets, checkpoints and Data preparation
 We introduce how to prepare the data, model weights and assets for pre-training, fine-tuning and inference.
 
+1. **Download model checkpoints:**
+
+    ```sh
+    # Download BoneFM base model (.pth file)
+    wget "https://drive.google.com/file/d/1NsiBZOx7vAYiN0IDdjYdqFkfArrW_Scn/view?usp=sharing" -O BoneFM.pth
+
+    # Download BoneCoT model weights for primary/metastatic inference
+    wget "https://drive.google.com/file/d/1Id90UzxbO5e5iRVpn9Kej32pZAnAKTho/view?usp=sharing" -O bonecot_weights.zip
+    ```
+
+2. **Extract BoneCoT model weights:**
+
+    ```sh
+    # Create checkpoints directory if it doesn't exist
+    mkdir -p finetune/models/checkpoints
+
+    # Extract BoneCoT weights to the correct location
+    unzip bonecot_weights.zip -d finetune/models/checkpoints
+    ```
+
+The BoneCoT model weights should be placed in the `finetune/models/checkpoints` directory for the inference code to locate them correctly.
+
+
+
 
 ### 🌱Play with `BoneCoT_inference.ipynb`
 In the notebook `BoneCoT_inference.ipynb`, we provide a minimal example demonstrating how to use BoneCoT for CT image diagnosis. The notebook covers:
