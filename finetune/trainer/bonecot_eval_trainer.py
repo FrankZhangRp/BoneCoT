@@ -147,9 +147,9 @@ class BoneCoT_Eval_Trainer(BaseTrainer):
             self.model_pathological_fracture = None
         
         
-        self.args.data.bonecot_extra_feature_dim = 15
+        self.args.data.bonecot_extra_feature_dim = 13
         self.args.model.num_classes = 1
-        self.bonecot_renal_insufficiency_feature_dim = 15
+        self.bonecot_renal_insufficiency_feature_dim = 13
         self.bonecot_renal_insufficiency_num_classes = 1
         if 'renal_insufficiency' in self.use_cot_relative_model and os.path.exists(self.use_cot_relative_model['renal_insufficiency']):
             self.model_renal_insufficiency, self.embed_dim = build_bonecot_linear_finetune_model_from_cfg(cfg=self.args, only_teacher=True)
@@ -410,7 +410,7 @@ class BoneCoT_Eval_Trainer(BaseTrainer):
             'breast_PR': [3,4,5,6],
             'breast_HER2': [3,4,5,6],
             'breast_AR': [3,4,5,6],
-            'renal_insufficiency': [0,1,2,8,9,10,11,12,13,14,15,3,4,5,6],
+            'renal_insufficiency': [8,9,10,11,12,13,14,15,3,4,5,6,17],
         }
         
         for model_name in self.model_dict.keys():
