@@ -1,5 +1,5 @@
 from .base_trainer import BaseTrainer
-from ..models import build_bonefm_model_from_cfg, build_bonefm_single_linear_finetune_model_from_cfg
+from ..models import build_bonefm_model_from_cfg
 import torch
 import traceback
 
@@ -59,9 +59,3 @@ class BoneFM_Finetune_Trainer(BaseTrainer):
             self.logger.error(f"Exception: {e}")
             self.logger.error(traceback.format_exc())
             
-class BoneFM_Finetune_Single_Linear_Trainer(BoneFM_Finetune_Trainer):
-    def __init__(self, args):
-        super().__init__(args)
-    
-    def get_model(self):
-        self.model, self.embed_dim = build_bonefm_single_linear_finetune_model_from_cfg(cfg=self.args, only_teacher=True)

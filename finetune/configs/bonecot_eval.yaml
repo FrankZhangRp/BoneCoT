@@ -3,8 +3,8 @@ data:
   val_dataset: finetune/data/eval_demo_data/labels/eval.csv # val.csv path here
   test_dataset: finetune/data/eval_demo_data/labels/eval.csv # test.csv path here
   batch_size: 16
-  num_workers: 16
-  bonecot_extra_feature_dim: 16
+  num_workers: 4
+  extra_token_num: 5
 crops:
   global_crops_size: 518
 model:
@@ -13,7 +13,10 @@ model:
   use_n_blocks: 4
   use_avgpool: true
   pretrained_weights: ""
-  cot_relative_model_dict:
+  main_task: "primary_metastatic"
+  relative_task: ["osteoblastic", "osteolytic", "type_of_primary_tumor", "pathological_fracture", "spinal_cord_compression"]
+  backbone_ckpt_path: ""
+  model_ckpt_dict:
     bone_lesion: '/path/to/checkpoints/bone_lesion.pth'
     benign_malignant: '/path/to/checkpoints/benign_malignant.pth'
     primary_metastatic: '/path/to/checkpoints/primary_metastasis.pth'
@@ -35,5 +38,6 @@ model:
     renal_insufficiency: '/path/to/checkpoints/renal_insufficiency.pth'
 optim:
   epochs: 3
+  loss_type: BCE
 trainer: BoneCoT_Inference_Trainer
 

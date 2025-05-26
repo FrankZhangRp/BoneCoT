@@ -43,45 +43,24 @@ def build_bonefm_model_from_cfg(cfg, only_teacher = True):
         backbone_model = backbone_model.cuda()
     else:
         raise RuntimeError("CUDA is not available.")
-    model = bonefm_classifier.BoneFM_Finetune_Classification(backbone_model, embed_dim, cfg.model.use_n_blocks, cfg.model.use_avgpool, cfg.model.num_classes)
+    model = bonefm_classifier.BoneFM_Classification(backbone_model, embed_dim, cfg.model.use_n_blocks, cfg.model.use_avgpool, cfg.model.num_classes)
     return model, embed_dim
 
-def build_bonefm_single_linear_finetune_model_from_cfg(cfg, only_teacher = True):
+def build_bonecot_finetune_model_from_cfg(cfg, only_teacher = True):
     if only_teacher:
         backbone_model, embed_dim = build_backbone_model_from_cfg(cfg, only_teacher=only_teacher)
     else:
         _, backbone_model, embed_dim = build_backbone_model_from_cfg(cfg, only_teacher=only_teacher)
-    if torch.cuda.is_available():
-        backbone_model = backbone_model.cuda()
-    else:
-        raise RuntimeError("CUDA is not available.")
-    model = bonefm_classifier.BoneFM_Finetune_Single_Linear_Classification(backbone_model, embed_dim, cfg.model.use_n_blocks, cfg.model.use_avgpool, cfg.model.num_classes)
+    model = bonecot_classifier.SingleBoneCoT_TwoLinearClassification(backbone_model, cfg.data.bonecot_extra_feature_dim, embed_dim, cfg.model.use_n_blocks, cfg.model.use_avgpool, cfg.model.num_classes)
     return model, embed_dim
 
-def build_bonecot_linear_finetune_model_from_cfg(cfg, only_teacher = True):
+def build_bonecot_multi_round_inference_model_from_cfg(cfg, only_teacher = True):
     if only_teacher:
         backbone_model, embed_dim = build_backbone_model_from_cfg(cfg, only_teacher=only_teacher)
     else:
         _, backbone_model, embed_dim = build_backbone_model_from_cfg(cfg, only_teacher=only_teacher)
-    model = bonecot_classifier.LinearFinetuneClassificationWithBoneCoT(backbone_model, cfg.data.bonecot_extra_feature_dim, embed_dim, cfg.model.use_n_blocks, cfg.model.use_avgpool, cfg.model.num_classes)
-    return model, embed_dim
+    model = bonecot_classifier.BoneCoT_MultiRound_InferenceClassification(backbone_model, cfg.data.extra_token_num,  embed_dim, cfg.model.use_n_blocks, cfg.model.use_avgpool, cfg.model.num_classes)
+    return backbone_model, model, embed_dim
 
-def build_bonecot_single_linear_finetune_model_from_cfg(cfg, only_teacher = True):
-    if only_teacher:
-        backbone_model, embed_dim = build_backbone_model_from_cfg(cfg, only_teacher=only_teacher)
-    else:
-        _, backbone_model, embed_dim = build_backbone_model_from_cfg(cfg, only_teacher=only_teacher)
-    model = bonecot_classifier.BoneFM_Finetune_Single_Linear_Classification(backbone_model, cfg.data.bonecot_extra_feature_dim, embed_dim, cfg.model.use_n_blocks, cfg.model.use_avgpool, cfg.model.num_classes)
-    return model, embed_dim
-
-def build_only_backbone_feature_model_from_cfg(cfg, only_teacher=True):
-    if only_teacher:
-        backbone_model, embed_dim = build_backbone_model_from_cfg(cfg, only_teacher=only_teacher)
-    else:
-        _, backbone_model, embed_dim = build_backbone_model_from_cfg(cfg, only_teacher=only_teacher)
-    if torch.cuda.is_available():
-        backbone_model = backbone_model.cuda()
-    else:
-        raise RuntimeError("CUDA is not available.")
-    model = bonefm_classifier.OnlyBackboneModel(backbone_model, embed_dim, cfg.model.use_n_blocks, cfg.model.use_avgpool)
-    return model, embed_dim
+def build_bonecot_relative_model(backbone_model, extra_token_num, embed_dim, use_n_blocks, use_avgpool, num_classes):
+    return bonecot_classifier.BoneCoT_MultiRound_InferenceClassification(backbone_model, extra_token_num, embed_dim, use_n_blocks, use_avgpool, num_classes)
