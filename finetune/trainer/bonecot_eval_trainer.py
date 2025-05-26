@@ -104,7 +104,6 @@ class BoneCoT_Eval_Trainer(BaseTrainer):
             if key_name in model_dict.keys():
                 model_dict[key_name] = ckpt_dict[key_name]
         model.load_state_dict(model_dict)
-        self.logger.info(f"Load classifier checkpoint from {ckpt_dict.keys()}")
     
     @torch.no_grad()
     def val(self, n_epoch, split='val'):
