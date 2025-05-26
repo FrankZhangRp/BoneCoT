@@ -80,7 +80,7 @@ We introduce how to prepare the data, model weights and assets for pre-training,
     wget "https://drive.google.com/file/d/1NsiBZOx7vAYiN0IDdjYdqFkfArrW_Scn/view?usp=sharing" -O BoneFM.pth
 
     # Download BoneCoT model weights for primary/metastatic inference
-    wget "https://drive.google.com/file/d/1Id90UzxbO5e5iRVpn9Kej32pZAnAKTho/view?usp=sharing" -O bonecot_weights.zip
+    wget "https://drive.google.com/file/d/1Be9GyeDTnXjxJ6KA8wYUFHDM6fKmnixr/view?usp=sharing" -O bonecot_weights.zip
     ```
 
 2. **Extract BoneCoT model weights:**
