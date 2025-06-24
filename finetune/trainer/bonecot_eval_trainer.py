@@ -5,7 +5,7 @@ from torchvision import transforms
 from ..data import BoneCoT_Inference_Dataset
 import os
 import numpy as np
-
+from tqdm import tqdm
 
 class BoneCoT_Eval_Trainer(BaseTrainer):
     def __init__(self, args):
@@ -56,7 +56,14 @@ class BoneCoT_Eval_Trainer(BaseTrainer):
         # 读取对应每个relative_task的ckpt的
         for task_name in self.args.model.relative_task:
             if os.path.exists(self.args.model.model_ckpt_dict[task_name]):
-                self.relative_ckpt_dict[task_name] = torch.load(self.args.model.model_ckpt_dict[task_name], map_location='cpu', weights_only=False)['model']
+                task_ckpt_dict = torch.load(self.args.model.model_ckpt_dict[task_name], map_location='cpu', weights_only=False)
+                if 'model' in task_ckpt_dict.keys():
+                    self.relative_ckpt_dict[task_name] = task_ckpt_dict['model']
+                else:
+                    self.relative_ckpt_dict[task_name] = {}
+                    for key in task_ckpt_dict.keys():
+                        if '.linear.' in key:
+                            self.relative_ckpt_dict[task_name][key.replace('.linear', '')] = task_ckpt_dict[key]
                 print(f"Use relative model for inference: {task_name}")
                 self.relative_model_config[task_name] = {
                     'extra_token_num': (self.relative_ckpt_dict[task_name]['linear_classifier_1.weight'].shape[1]//1536) - 5,
@@ -83,7 +90,7 @@ class BoneCoT_Eval_Trainer(BaseTrainer):
                 for key, values in checkpoint['teacher'].items():
                     if 'backbone' in key:
                         model_state_dict[key.replace('backbone.', '')] = values
-                self.model.backbone.feature_model.load_state_dict(model_state_dict, strict=True)  # backbone部分的都一起导入
+                self.model.backbone.feature_model.load_state_dict(model_state_dict, strict=True)
             else:
                 raise ValueError("Invalid checkpoint")
         except Exception as e:
@@ -91,7 +98,13 @@ class BoneCoT_Eval_Trainer(BaseTrainer):
             self.logger.error(f"Exception: {e}")
             self.logger.error(traceback.format_exc())
         self.logger.info(f"Load backbone checkpoint from {self.args.model.backbone_ckpt_path}")
-        self.main_task_ckpt = torch.load(self.args.model.model_ckpt_dict[self.args.model.main_task], map_location='cpu', weights_only=False)['model']
+        self.main_task_ckpt = torch.load(self.args.model.model_ckpt_dict[self.args.model.main_task], map_location='cpu', weights_only=False)
+        if 'model' in self.main_task_ckpt.keys():
+            self.main_task_ckpt = self.main_task_ckpt['model']
+        else:
+            for key in self.main_task_ckpt.keys():
+                if '.linear.' in key:
+                    self.main_task_ckpt[key.replace('.linear', '')] = self.main_task_ckpt[key]
         self.load_classifier_ckpt(self.model, self.main_task_ckpt)
         self.logger.info(f"Load main task checkpoint from {self.args.model.model_ckpt_dict[self.args.model.main_task]}")
         for task_name in self.args.model.relative_task:
@@ -108,21 +121,31 @@ class BoneCoT_Eval_Trainer(BaseTrainer):
     @torch.no_grad()
     def val(self, n_epoch, split='val'):
         bonecot_use_feature_dict = {
-            'primary_metastatic': ["osteoblastic", "osteolytic", "type_of_primary_tumor", "pathological_fracture", "spinal_cord_compression"],
+            # 'benign_malignant': ["osteoblastic", "osteolytic", "pathological_fracture"],
+            'benign_malignant': ["osteolytic", "osteoblastic", "pathological_fracture"],
+            'primary_metastatic': ["osteolytic", "osteoblastic", "type_of_primary_tumor", "pathological_fracture", "spinal_cord_compression"],
             'osteoblastic': ["type_of_primary_tumor", "pathological_fracture"],
             'osteolytic': ["type_of_primary_tumor", "pathological_fracture"],
             'pathological_fracture': ["osteoblastic", "osteolytic", "type_of_primary_tumor"],
             'spinal_cord_compression': ["osteoblastic", "osteolytic", "type_of_primary_tumor", "pathological_fracture"],
             'type_of_primary_tumor': ["osteoblastic", "osteolytic"],
         }
-        hidden_feature_task_name_idx = {
-            'primary_metastatic': 0,
-            'osteoblastic': 1,
-            'osteolytic': 2,
-            'pathological_fracture': 3,
-            'spinal_cord_compression': 4,
-            'type_of_primary_tumor': 5,
-        }
+        if self.args.model.main_task == 'primary_metastatic':
+            hidden_feature_task_name_idx = {
+                'primary_metastatic': 0,
+                'osteolytic': 1,
+                'osteoblastic': 2,
+                'pathological_fracture': 3,
+                'spinal_cord_compression': 4,
+                'type_of_primary_tumor': 5,
+            }
+        elif self.args.model.main_task == 'benign_malignant':
+            hidden_feature_task_name_idx = {
+                'benign_malignant': 0,
+                'osteolytic': 1,
+                'osteoblastic': 2,
+                'pathological_fracture': 3,
+            }
         val_results_dict = {key_name: {} for key_name in self.relative_model_dict.keys()}
         val_results_dict[self.args.model.main_task] = {}
         dataloader = self.dataloaders_dict[split]
@@ -144,73 +167,90 @@ class BoneCoT_Eval_Trainer(BaseTrainer):
                 
         total_hidden_feature = np.zeros([len(self.datasets_dict[split]), len(self.relative_model_dict.keys()) + 1, self.embed_dim], dtype=np.float32)
         # First inference for the main task
-        for i, data_dict in enumerate(dataloader):
-            self.model.cuda()
-            self.model.eval()
-            if len(data_dict) == 5:
-                raw_images, labels, _, image_name, study_series_names = data_dict['image'], data_dict['label'], data_dict['feature'], data_dict['image_name'], data_dict['study_series_name']
-            else:
-                raise ValueError(f"Invalid data_dict: {data_dict}")
-            raw_images = raw_images.to(self.device)
-            
-            # Get relative hidden features
-            hidden_feature_list = []
-            for relative_task_name in bonecot_use_feature_dict[self.args.model.main_task]:
-                hidden_feature_list.append(total_hidden_feature_before[i, hidden_feature_task_name_idx[relative_task_name]])
-            hidden_feature_concate = np.concatenate(hidden_feature_list, axis=0)
-            hidden_feature_concate = torch.from_numpy(hidden_feature_concate).to(self.device)
-            hidden_feature_concate = hidden_feature_concate.unsqueeze(0)
-            with self.amp_context:
-                outputs, hidden_features = self.model(raw_images, extra_hidden_features=hidden_feature_concate, hidden_output=True)
-                
-                if self.args.model.main_task != 'type_of_primary_tumor':
-                    preds = torch.sigmoid(outputs)
-                else:
-                    preds = torch.softmax(outputs, dim=1)
-                total_hidden_feature[i, 0] = hidden_features.detach().cpu().numpy()
+        
+        with tqdm(total=len(dataloader), desc=f"{split} Epoch [{n_epoch}/{self.total_epoch}]", unit="batch") as pbar:
+            for i, data_dict in enumerate(dataloader):
+                self.model.cuda()
+                self.model.eval()
                 if len(data_dict) == 5:
-                    for j in range(len(study_series_names)):
-                        study_id, series_id = study_series_names[j].split('_')
-                        if study_id not in val_results_dict[self.args.model.main_task].keys():
-                            val_results_dict[self.args.model.main_task][study_id] = {}
-                        if series_id not in val_results_dict[self.args.model.main_task][study_id].keys():
-                            val_results_dict[self.args.model.main_task][study_id][series_id] = {}                        
-                        val_results_dict[self.args.model.main_task][study_id][series_id][image_name[j]] = {'pred': preds[j].cpu().numpy(), 'outputs': outputs[j].cpu().numpy(), 'hidden_features': hidden_features[j].cpu().numpy()} 
-                
-            for j, model_name in enumerate(self.relative_model_dict.keys()):
-                self.relative_model_dict[model_name].cuda()
-                self.relative_model_dict[model_name].eval()
+                    raw_images, labels, _, image_name, study_series_names = data_dict['image'], data_dict['label'], data_dict['feature'], data_dict['image_name'], data_dict['study_series_name']
+                else:
+                    raise ValueError(f"Invalid data_dict: {data_dict}")
+                raw_images = raw_images.to(self.device)
+                real_batch_size = raw_images.shape[0]
                 # Get relative hidden features
                 hidden_feature_list = []
-                for relative_task_name in bonecot_use_feature_dict[model_name]:
-                    hidden_feature_list.append(total_hidden_feature_before[i, hidden_feature_task_name_idx[relative_task_name]])
+                for single_sub_index in range(real_batch_size):
+                    real_index = i*self.batch_size + single_sub_index
+                    sub_hidden_feature_list = []
+                    for relative_task_name in bonecot_use_feature_dict[self.args.model.main_task]:
+                        sub_hidden_feature_list.append(total_hidden_feature_before[real_index, hidden_feature_task_name_idx[relative_task_name]])
+                    hidden_feature_list.append(np.concatenate(sub_hidden_feature_list, axis=0).reshape(1, -1))
                 hidden_feature_concate = np.concatenate(hidden_feature_list, axis=0)
                 hidden_feature_concate = torch.from_numpy(hidden_feature_concate).to(self.device)
-                hidden_feature_concate = hidden_feature_concate.unsqueeze(0)
                 with self.amp_context:
-                    outputs, hidden_features = self.relative_model_dict[model_name](raw_images, extra_hidden_features=hidden_feature_concate, hidden_output=True)
+                    outputs, hidden_features = self.model(raw_images, extra_hidden_features=hidden_feature_concate, hidden_output=True)
                     
-                    if model_name != 'type_of_primary_tumor':
+                    if self.args.model.main_task != 'type_of_primary_tumor':
                         preds = torch.sigmoid(outputs)
                     else:
                         preds = torch.softmax(outputs, dim=1)
-                    
-                    total_hidden_feature[i, j+1] = hidden_features.detach().cpu().numpy()        
-                    
+                    total_hidden_feature[i*self.batch_size:i*self.batch_size+real_batch_size, 0] = hidden_features.detach().cpu().numpy()
                     if len(data_dict) == 5:
                         for j in range(len(study_series_names)):
                             study_id, series_id = study_series_names[j].split('_')
-                            if study_id not in val_results_dict[model_name].keys():
-                                val_results_dict[model_name][study_id] = {}
-                            if series_id not in val_results_dict[model_name][study_id].keys():
-                                val_results_dict[model_name][study_id][series_id] = {}                        
-                            val_results_dict[model_name][study_id][series_id][image_name[j]] = {'pred': preds[j].cpu().numpy(), 'outputs': outputs[j].cpu().numpy(), 'hidden_features': hidden_features[j].cpu().numpy()} 
-
+                            if study_id not in val_results_dict[self.args.model.main_task].keys():
+                                val_results_dict[self.args.model.main_task][study_id] = {}
+                            if series_id not in val_results_dict[self.args.model.main_task][study_id].keys():
+                                val_results_dict[self.args.model.main_task][study_id][series_id] = {}                        
+                            val_results_dict[self.args.model.main_task][study_id][series_id][image_name[j]] = {'pred': preds[j].cpu().numpy(), 'outputs': outputs[j].cpu().numpy(), 'hidden_features': hidden_features[j].cpu().numpy(), 'label': labels[j].cpu().numpy()} 
+                self.metric.update(outputs.detach().cpu().squeeze(1), labels)
+                for j, model_name in enumerate(self.relative_model_dict.keys()):
+                    self.relative_model_dict[model_name].cuda()
+                    self.relative_model_dict[model_name].eval()
+                    # Get relative hidden features
+                    if self.relative_model_config[model_name]['extra_token_num'] > 0:
+                        hidden_feature_list = []
+                        for single_sub_index in range(real_batch_size):
+                            real_index = i*self.batch_size + single_sub_index
+                            sub_hidden_feature_list = []
+                            for relative_task_name in bonecot_use_feature_dict[model_name]:
+                                sub_hidden_feature_list.append(total_hidden_feature_before[real_index, hidden_feature_task_name_idx[relative_task_name]])
+                            hidden_feature_list.append(np.concatenate(sub_hidden_feature_list, axis=0).reshape(1, -1))
+                        hidden_feature_concate = np.concatenate(hidden_feature_list, axis=0)
+                        hidden_feature_concate = torch.from_numpy(hidden_feature_concate).to(self.device)
+                    else:
+                        hidden_feature_concate = None
+                    with self.amp_context:                        
+                        outputs, hidden_features = self.relative_model_dict[model_name](raw_images, extra_hidden_features=hidden_feature_concate, hidden_output=True)
+                        
+                        if model_name != 'type_of_primary_tumor':
+                            preds = torch.sigmoid(outputs)
+                        else:
+                            preds = torch.softmax(outputs, dim=1)
+                        
+                        total_hidden_feature[i*self.batch_size:i*self.batch_size+real_batch_size, j+1] = hidden_features.detach().cpu().numpy()        
+                        
+                        if len(data_dict) == 5:
+                            for j in range(len(study_series_names)):
+                                study_id, series_id = study_series_names[j].split('_')
+                                if study_id not in val_results_dict[model_name].keys():
+                                    val_results_dict[model_name][study_id] = {}
+                                if series_id not in val_results_dict[model_name][study_id].keys():
+                                    val_results_dict[model_name][study_id][series_id] = {}                        
+                                val_results_dict[model_name][study_id][series_id][image_name[j]] = {'pred': preds[j].cpu().numpy(), 'outputs': outputs[j].cpu().numpy(), 'hidden_features': hidden_features[j].cpu().numpy()} 
+                pbar.update(1)
+            
         save_file_name = os.path.join(self.pred_save_dir, f'{split}_epoch_{n_epoch}.npz')
         np.savez(save_file_name, val_results_dict)
-        return True
+        if len(dataloader) > 1:
+            return self.metric.results()
+        else:
+            return True
 
     def run(self):
         for n_epoch in range(self.start_epoch, self.total_epoch):
-            self.val(n_epoch, split='test')
+            self.results_dict['test'][n_epoch] = self.val(n_epoch, split='test')
+            if len(self.dataloaders_dict['test']) > 1:
+                test_str = self.format_results(self.results_dict['test'][n_epoch])
         self.logger.info(f"Inference finished")

@@ -13,6 +13,34 @@ This repository is divided into two main parts:
 
 ### 🔧 Install Environment
 
+0. **System Requirements：**
+
+
+    Before you begin, please ensure your environment meets the following requirements:
+
+    * **OS**: Ubuntu 22.04 (tested on Ubuntu 22.04.4 LTS)
+    * **GPU**: NVIDIA GPU with **≥24 GB** VRAM (tested on NVIDIA A100-80G)
+    * **NVIDIA Driver**: `>=550.54.15`
+    * **CUDA Toolkit**: `12.4`
+    * **Python**: 3.9
+    * **Conda**: Installed via [Anaconda](https://www.anaconda.com/products/distribution)
+
+    Check with:
+
+    ```sh
+    # Check Ubuntu version
+    lsb_release -a
+
+    # Check GPU and VRAM
+    nvidia-smi
+
+    # Check CUDA version
+    nvcc --version
+
+    # Check Python version
+    python --version
+    ```
+
 1. **Create environment with conda:**
 
     ```sh
@@ -48,7 +76,7 @@ This repository is divided into two main parts:
 4. **Install additional dependencies:**
 
     ```sh
-    pip install -r requirement.txt
+    pip install -r requirements.txt
     ```
 
 5. **[Optional] Install DINOv2 pre-training environment:**
@@ -79,21 +107,49 @@ We introduce how to prepare the data, model weights and assets for pre-training,
     # Download BoneFM base model (.pth file)
     wget "https://drive.google.com/file/d/1NsiBZOx7vAYiN0IDdjYdqFkfArrW_Scn/view?usp=sharing" -O BoneFM.pth
 
-    # Download BoneCoT model weights for primary/metastatic inference
-    wget "https://drive.google.com/file/d/1Be9GyeDTnXjxJ6KA8wYUFHDM6fKmnixr/view?usp=sharing" -O bonecot_weights.zip
+    # Download BoneCoT model weights
+    wget "https://drive.google.com/file/d/1Id90UzxbO5e5iRVpn9Kej32pZAnAKTho/view?usp=sharing" -O bonecot_weights.zip
+
+    # Download Inference data (split archive files)
+    wget "" -O datasets.zip
+    wget "" -O datasets.z01
+    wget "" -O datasets.z02
+    wget "" -O datasets.z03
+    wget "" -O datasets.z04
+    wget "" -O datasets.z05
+    wget "" -O datasets.z06
+    wget "" -O datasets.z07
+    wget "" -O datasets.z08
+    wget "" -O datasets.z09
+    wget "" -O datasets.z10
     ```
 
-2. **Extract BoneCoT model weights:**
+2. **Create checkpoints directory:**
 
     ```sh
     # Create checkpoints directory if it doesn't exist
-    mkdir -p finetune/models/checkpoints
-
-    # Extract BoneCoT weights to the correct location
-    unzip bonecot_weights.zip -d finetune/models/checkpoints
+    mkdir -p finetune/checkpoints
     ```
 
-The BoneCoT model weights should be placed in the `finetune/models/checkpoints` directory for the inference code to locate them correctly.
+3. **Extract BoneCoT model weights:**
+
+    ```sh
+    # Extract BoneCoT weights to the correct location
+    unzip bonecot_weights.zip -d finetune/checkpoints
+    ```
+
+4. **Extract inference datasets:**
+
+    ```sh
+    # Create data directory if it doesn't exist
+    mkdir -p data/datasets
+    
+    # Combine split archive files and extract to data/datasets
+    zip -F datasets.zip --out datasets_combined.zip
+    unzip datasets_combined.zip -d data/datasets
+    ```
+
+The BoneCoT model weights should be placed in the `finetune/checkpoints` directory for the inference code to locate them correctly.
 
 
 
@@ -112,3 +168,58 @@ In the notebook `BoneCoT_inference.ipynb`, we provide a minimal example demonstr
    - ...
 
 The notebook provides step-by-step guidance with example code to help you get started with BoneCoT inference.
+
+### 🔬 5-Fold Cross-Validation Inference Notebooks
+We provide three Jupyter notebooks for 5-fold cross-validation inference corresponding to the three main diagnostic tasks:
+
+- `Task1_bone_lesion_inference.ipynb` - Bone lesion detection inference
+- `Task2_benign_or_malignant_inference.ipynb` - Benign or malignant classification inference  
+- `Task3_primary_or_metastatic_inference.ipynb` - Primary or metastatic classification inference
+
+Each notebook runs inference across all 5 folds of the cross-validation setup, providing comprehensive evaluation results.
+
+### 🚀 Running Jupyter Notebooks
+
+To start using the notebooks, follow these steps:
+
+1. **Navigate to the BoneCoT directory:**
+   ```sh
+   cd /path/to/BoneCoT
+   ```
+
+2. **Activate the BoneCoT conda environment:**
+   ```sh
+   conda activate bonecot
+   ```
+
+3. **Start Jupyter notebook server (recommended to use tmux to prevent accidental closure):**
+   ```sh
+   # Start a new tmux session
+   tmux new-session -d -s bonecot_jupyter
+   
+   # Attach to the tmux session
+   tmux attach-session -t bonecot_jupyter
+   
+   # Navigate to the BoneCoT directory:
+   cd /path/to/BoneCoT
+
+   # Activate the BoneCoT conda environment
+   conda activate bonecot
+
+   # Start Jupyter notebook server in the tmux session
+   jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser
+   
+   # After starting the server, you will see a URL with a token in the terminal output
+   # Copy the token from the output, then:
+   # 1. Open your browser and navigate to http://your_server_ip:8888
+   # 2. Enter the token when prompted
+   # 3. Set a password for future logins
+   # 4. You can now access the Jupyter notebook interface
+   ```
+   
+   **Note:** Using tmux is recommended to keep the Jupyter notebook server running even if your terminal session is accidentally closed. You can detach from the tmux session using `Ctrl+B` followed by `D`, and reattach later using `tmux attach-session -t bonecot_jupyter`.
+
+4. **Open and run the desired notebook:**
+   - Navigate to the notebook files in your browser
+   - Select the task-specific notebook you want to run
+   - Execute the cells to perform inference

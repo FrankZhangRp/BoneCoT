@@ -35,9 +35,9 @@ class BoneFM_Finetune_Trainer(BaseTrainer):
             raise ValueError(f"Optimizer {self.args.optim.optimizer} not supported.")    
     
     def load_checkpoint(self):
-        self.logger.info(f"Loading checkpoint from {self.args.model.pretrained_weights}")
+        # self.logger.info(f"Loading checkpoint from {self.args.model.pretrained_weights}")
         if self.args.model.pretrained_weights == "":
-            self.logger.info("No checkpoint loaded.")
+            # self.logger.info("No checkpoint loaded.")
             return
         try:
             model_state_dict = self.model.backbone.feature_model.state_dict()

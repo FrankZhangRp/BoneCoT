@@ -1,0 +1,44 @@
+data:
+  train_dataset: finetune/data/eval_demo_data/labels/eval.csv # train.csv path here
+  val_dataset: finetune/data/eval_demo_data/labels/eval.csv # val.csv path here
+  test_dataset: finetune/data/eval_demo_data/labels/eval.csv # test.csv path here
+  batch_size: 128
+  num_workers: 4
+  extra_token_num: 3
+crops:
+  global_crops_size: 518
+model:
+  n_last_blocks_list: [1, 4]
+  num_classes: 1
+  use_n_blocks: 4
+  use_avgpool: true
+  pretrained_weights: ""
+  main_task: "benign_malignant"
+  relative_task: ["osteolytic", "osteoblastic", "pathological_fracture"]
+  backbone_ckpt_path: ""
+  classifier_ckpt_path: ""
+  model_ckpt_dict:
+    bone_lesion: '/path/to/checkpoints/bone_lesion.pth'
+    benign_malignant: '/path/to/checkpoints/benign_malignant.pth'
+    primary_metastatic: '/path/to/checkpoints/primary_metastasis.pth'
+    osteoblastic: '/path/to/checkpoints/osteoblastic.pth'
+    osteolytic: '/path/to/checkpoints/osteolytic.pth'
+    spinal_cord_compression: '/path/to/checkpoints/spinal_cord_compression.pth'
+    thrombosis: '/path/to/checkpoints/thrombosis.pth'
+    pathological_fracture: '/path/to/checkpoints/pathological_fracture.pth'
+    type_of_primary_tumor: '/path/to/checkpoints/type_of_primary_tumor.pth'
+    hypercalcemia: '/path/to/checkpoints/hypercalcemia.pth'
+    lung_SCLC_or_NSCLC: '/path/to/checkpoints/lung_SCLC_or_NSCLC.pth'
+    lung_EGFR: '/path/to/checkpoints/lung_EGFR.pth'
+    lung_ROS1: '/path/to/checkpoints/lung_ROS1.pth'
+    lung_ALK: '/path/to/checkpoints/lung_ALK.pth'
+    breast_ER: '/path/to/checkpoints/breast_ER.pth'
+    breast_PR: '/path/to/checkpoints/breast_PR.pth'
+    breast_HER2: '/path/to/checkpoints/breast_HER2.pth'
+    breast_AR: '/path/to/checkpoints/breast_AR.pth'
+    renal_insufficiency: '/path/to/checkpoints/renal_insufficiency.pth'
+optim:
+  epochs: 1
+  loss_type: BCE
+trainer: BoneCoT_Eval_Trainer
+
