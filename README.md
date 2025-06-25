@@ -111,17 +111,18 @@ We introduce how to prepare the data, model weights and assets for pre-training,
     wget "https://drive.google.com/file/d/1Id90UzxbO5e5iRVpn9Kej32pZAnAKTho/view?usp=sharing" -O bonecot_weights.zip
 
     # Download Inference data (split archive files)
-    wget "" -O datasets.zip
-    wget "" -O datasets.z01
-    wget "" -O datasets.z02
-    wget "" -O datasets.z03
-    wget "" -O datasets.z04
-    wget "" -O datasets.z05
-    wget "" -O datasets.z06
-    wget "" -O datasets.z07
-    wget "" -O datasets.z08
-    wget "" -O datasets.z09
-    wget "" -O datasets.z10
+    wget "https://drive.google.com/file/d/1IuGLOwpuTekO8PyI0aj-Y19onYIe_WjR/view?usp=sharing" -O datasets.zip
+    wget "https://drive.google.com/file/d/127_tfzelU-cAroytq4z3_8_qh_0ZlWHC/view?usp=sharing" -O datasets.z01
+    wget "https://drive.google.com/file/d/1dutPZw934XhdPYJtoxKv_2oH3f4LxoIm/view?usp=sharing" -O datasets.z02
+    wget "https://drive.google.com/file/d/1Sj3UkfDB8tTzjD9F_D30IYc9qVJeA6mP/view?usp=sharing" -O datasets.z03
+    wget "https://drive.google.com/file/d/1l_VMPjtiOTyBLZICGHFlpygg_5gr-T2N/view?usp=sharing" -O datasets.z04
+    wget "https://drive.google.com/file/d/1K9JgOC0IhjKSWYoNqr6w589OX_t7sExk/view?usp=sharing" -O datasets.z05
+    wget "https://drive.google.com/file/d/1ALd5yBrjvgdUUkkR_2EwOr9Yd8nNoS6r/view?usp=sharing" -O datasets.z06
+    wget "https://drive.google.com/file/d/158jSc-xEB2VK2tFCM4NyS5oWZ2DM-z-C/view?usp=sharing" -O datasets.z07
+    wget "https://drive.google.com/file/d/16lzZSCa4fSlH6LSCxb72spRtkMA1FtSN/view?usp=sharing" -O datasets.z08
+    wget "https://drive.google.com/file/d/16lzZSCa4fSlH6LSCxb72spRtkMA1FtSN/view?usp=sharing" -O datasets.z09
+    wget "https://drive.google.com/file/d/1ZptePUAyh1qs4oy4HZ7K6XnAggb5HMQn/view?usp=sharing" -O datasets.z10
+    wget "https://drive.google.com/file/d/1jdmI29y8lIl6POCtBueihUGTCdGlfPMa/view?usp=sharing" -O datasets.z11
     ```
 
 2. **Create checkpoints directory:**
@@ -129,24 +130,25 @@ We introduce how to prepare the data, model weights and assets for pre-training,
     ```sh
     # Create checkpoints directory if it doesn't exist
     mkdir -p finetune/checkpoints
+    cp BoneFM.pth finetune/checkpoints/
     ```
 
 3. **Extract BoneCoT model weights:**
 
     ```sh
     # Extract BoneCoT weights to the correct location
-    unzip bonecot_weights.zip -d finetune/checkpoints
+    unzip bonecot_weights.zip -d finetune
     ```
 
 4. **Extract inference datasets:**
 
     ```sh
     # Create data directory if it doesn't exist
-    mkdir -p data/datasets
+    mkdir -p finetune/data
     
-    # Combine split archive files and extract to data/datasets
+    # Combine split archive files and extract to data
     zip -F datasets.zip --out datasets_combined.zip
-    unzip datasets_combined.zip -d data/datasets
+    unzip datasets_combined.zip -d finetune/data
     ```
 
 The BoneCoT model weights should be placed in the `finetune/checkpoints` directory for the inference code to locate them correctly.
