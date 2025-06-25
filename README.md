@@ -54,8 +54,8 @@ This repository is divided into two main parts:
     # Download and unzip from anonymous repository (temporary link before publication)
     mkdir BoneCoT
     cd BoneCoT
-    wget https://anonymous.4open.science/r/BoneCoT-4DCF/download -O BoneCoT-4DCF.zip
-    unzip BoneCoT-4DCF.zip
+    wget https://anonymous.4open.science/api/repo/BoneCoT-4DCF/zip -O BoneCoT.zip
+    unzip BoneCoT.zip
     ```
 
     Note: After paper acceptance, the code will be publicly available on GitHub.
