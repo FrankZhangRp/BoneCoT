@@ -112,7 +112,7 @@ We introduce how to prepare the data, model weights and assets for pre-training,
     gdown "1NsiBZOx7vAYiN0IDdjYdqFkfArrW_Scn" -O BoneFM.pth
 
     # Download BoneCoT model weights
-    gdown "1Id90UzxbO5e5iRVpn9Kej32pZAnAKTho" -O bonecot_weights.zip
+    gdown "1nauKOqltTr121zCqeM0-xSxxf7uIM3Vj" -O bonecot_weights.zip
 
     # Download Inference data (split archive files)
     gdown "1IuGLOwpuTekO8PyI0aj-Y19onYIe_WjR" -O datasets.zip
