@@ -140,6 +140,17 @@ We introduce how to prepare the data, model weights and assets for fine-tuning a
 3. **Extract BoneCoT model weights:**
 
     ```sh
+    # Check if zip/unzip utilities are installed
+    if ! command -v zip &> /dev/null || ! command -v unzip &> /dev/null; then
+        echo "zip and unzip utilities are required. Installing..."
+        # For Ubuntu/Debian
+        sudo apt-get update && sudo apt-get install -y zip unzip
+        # For CentOS/RHEL
+        # sudo yum install -y zip unzip
+        # For macOS
+        # brew install zip unzip
+    fi
+    
     # Extract BoneCoT weights to the correct location
     unzip bonecot_weights.zip -d finetune
     ```
