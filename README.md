@@ -147,8 +147,6 @@ We introduce how to prepare the data, model weights and assets for fine-tuning a
         sudo apt-get update && sudo apt-get install -y zip unzip
         # For CentOS/RHEL
         # sudo yum install -y zip unzip
-        # For macOS
-        # brew install zip unzip
     fi
     
     # Extract BoneCoT weights to the correct location
