@@ -105,25 +105,28 @@ We introduce how to prepare the data, model weights and assets for pre-training,
 1. **Download model checkpoints:**
 
     ```sh
+    # Install gdown for downloading from Google Drive
+    pip install gdown
+    
     # Download BoneFM base model (.pth file)
-    wget "https://drive.google.com/file/d/1NsiBZOx7vAYiN0IDdjYdqFkfArrW_Scn/view?usp=sharing" -O BoneFM.pth
+    gdown "1NsiBZOx7vAYiN0IDdjYdqFkfArrW_Scn" -O BoneFM.pth
 
     # Download BoneCoT model weights
-    wget "https://drive.google.com/file/d/1Id90UzxbO5e5iRVpn9Kej32pZAnAKTho/view?usp=sharing" -O bonecot_weights.zip
+    gdown "1Id90UzxbO5e5iRVpn9Kej32pZAnAKTho" -O bonecot_weights.zip
 
     # Download Inference data (split archive files)
-    wget "https://drive.google.com/file/d/1IuGLOwpuTekO8PyI0aj-Y19onYIe_WjR/view?usp=sharing" -O datasets.zip
-    wget "https://drive.google.com/file/d/127_tfzelU-cAroytq4z3_8_qh_0ZlWHC/view?usp=sharing" -O datasets.z01
-    wget "https://drive.google.com/file/d/1dutPZw934XhdPYJtoxKv_2oH3f4LxoIm/view?usp=sharing" -O datasets.z02
-    wget "https://drive.google.com/file/d/1Sj3UkfDB8tTzjD9F_D30IYc9qVJeA6mP/view?usp=sharing" -O datasets.z03
-    wget "https://drive.google.com/file/d/1l_VMPjtiOTyBLZICGHFlpygg_5gr-T2N/view?usp=sharing" -O datasets.z04
-    wget "https://drive.google.com/file/d/1K9JgOC0IhjKSWYoNqr6w589OX_t7sExk/view?usp=sharing" -O datasets.z05
-    wget "https://drive.google.com/file/d/1ALd5yBrjvgdUUkkR_2EwOr9Yd8nNoS6r/view?usp=sharing" -O datasets.z06
-    wget "https://drive.google.com/file/d/158jSc-xEB2VK2tFCM4NyS5oWZ2DM-z-C/view?usp=sharing" -O datasets.z07
-    wget "https://drive.google.com/file/d/16lzZSCa4fSlH6LSCxb72spRtkMA1FtSN/view?usp=sharing" -O datasets.z08
-    wget "https://drive.google.com/file/d/16lzZSCa4fSlH6LSCxb72spRtkMA1FtSN/view?usp=sharing" -O datasets.z09
-    wget "https://drive.google.com/file/d/1ZptePUAyh1qs4oy4HZ7K6XnAggb5HMQn/view?usp=sharing" -O datasets.z10
-    wget "https://drive.google.com/file/d/1jdmI29y8lIl6POCtBueihUGTCdGlfPMa/view?usp=sharing" -O datasets.z11
+    gdown "1IuGLOwpuTekO8PyI0aj-Y19onYIe_WjR" -O datasets.zip
+    gdown "127_tfzelU-cAroytq4z3_8_qh_0ZlWHC" -O datasets.z01
+    gdown "1dutPZw934XhdPYJtoxKv_2oH3f4LxoIm" -O datasets.z02
+    gdown "1Sj3UkfDB8tTzjD9F_D30IYc9qVJeA6mP" -O datasets.z03
+    gdown "1l_VMPjtiOTyBLZICGHFlpygg_5gr-T2N" -O datasets.z04
+    gdown "1K9JgOC0IhjKSWYoNqr6w589OX_t7sExk" -O datasets.z05
+    gdown "1ALd5yBrjvgdUUkkR_2EwOr9Yd8nNoS6r" -O datasets.z06
+    gdown "158jSc-xEB2VK2tFCM4NyS5oWZ2DM-z-C" -O datasets.z07
+    gdown "16lzZSCa4fSlH6LSCxb72spRtkMA1FtSN" -O datasets.z08
+    gdown "16lzZSCa4fSlH6LSCxb72spRtkMA1FtSN" -O datasets.z09
+    gdown "1ZptePUAyh1qs4oy4HZ7K6XnAggb5HMQn" -O datasets.z10
+    gdown "1jdmI29y8lIl6POCtBueihUGTCdGlfPMa" -O datasets.z11
     ```
 
 2. **Create checkpoints directory:**
