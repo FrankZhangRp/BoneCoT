@@ -100,9 +100,9 @@ Following the above step, you should have all the necessary dependencies install
 
 
 ### Assets, checkpoints and Data preparation
-We introduce how to prepare the data, model weights and assets for pre-training, fine-tuning and inference.
+We introduce how to prepare the data, model weights and assets for fine-tuning and inference.
 
-1. **Download model checkpoints:**
+1. **Download model checkpoints and datasets:**
 
     ```sh
     # Install gdown for downloading from Google Drive
