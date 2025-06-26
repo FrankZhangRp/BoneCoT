@@ -129,6 +129,8 @@ We introduce how to prepare the data, model weights and assets for fine-tuning a
     gdown "1jdmI29y8lIl6POCtBueihUGTCdGlfPMa" -O datasets.z11
     ```
 
+    **Alternative Download Method**: If the command-line download fails, you can manually download all required files from this shared Google Drive folder: https://drive.google.com/drive/folders/1bg0sD-Q3XttOQ586Y345mf_FOABuroP1?usp=sharing
+
 2. **Create checkpoints directory:**
 
     ```sh
