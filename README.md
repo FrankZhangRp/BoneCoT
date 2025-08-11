@@ -1,6 +1,6 @@
-## BoneCoT: Multi-center Validation of a whole-body skeleton foundation model for bone metastases prediction using oncologist-derived chain of thought
+## 	BoneCoT: Multi-center validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought
 
-This is the official repo for "BoneCoT: Multi-center Validation of a whole-body skeleton foundation model for bone metastases prediction using oncologist-derived chain of thought". This repository includes code for BoneFM, which uses CT images to pretrain a ViT-14/g model based on DINOv2 methodology, as well as code for the fine-tuning phase, which covers both direct fine-tuning of BoneFM and the BoneCoT fine-tuning approach.
+This is the official repo for "BoneCoT: Multi-center validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought". This repository includes code for BoneFM, which uses CT images to pretrain a ViT-14/g model based on DINOv2 methodology, as well as code for the fine-tuning phase, which covers both direct fine-tuning of BoneFM and the BoneCoT fine-tuning approach.
 
 
 ### Repository Structure
