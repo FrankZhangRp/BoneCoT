@@ -1,22 +1,28 @@
-# BoneCoT
+# BoneCoT: Multi-center validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought
 
-Official code release for "BoneCoT: Multi-center validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought".
+[![GitHub stars](https://img.shields.io/github/stars/FrankZhangRp/BoneCoT?style=flat-square)](https://github.com/FrankZhangRp/BoneCoT/stargazers)
+[![Python](https://img.shields.io/badge/Python-3.9-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.5.1-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![CUDA](https://img.shields.io/badge/CUDA-12.4-76B900?style=flat-square&logo=nvidia&logoColor=white)](https://developer.nvidia.com/cuda-toolkit)
+[![License](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey?style=flat-square)](LICENSE)
 
-This repository contains:
+Official code release for the BoneCoT paper.
+
+This repository provides:
 
 - `BoneFM` pretraining code built on top of DINOv2
 - Fine-tuning and evaluation code for BoneFM and BoneCoT
-- Public notebook templates for downstream task inference
+- Public notebook templates for downstream inference
 
-## Public Release Scope
+## Overview
 
-Included:
+### Included in this public release
 
 - Source code
 - Public notebook templates
 - The released `BoneFM.pth` pretrained backbone checkpoint
 
-Not included:
+### Not included in this public release
 
 - Training, validation, or test datasets
 - Task-specific fine-tuned checkpoints
@@ -26,12 +32,16 @@ To run local evaluation, replace the placeholder paths in the notebooks or confi
 
 ## Repository Structure
 
-- `pretrain/`: BoneFM pretraining pipeline based on DINOv2
-- `finetune/`: fine-tuning and evaluation code for BoneFM and BoneCoT
-- `scripts/`: 5-fold notebook templates for task-specific evaluation
-- `BoneCoT_inference.ipynb`: local BoneCoT inference template
+| Path | Description |
+| --- | --- |
+| `pretrain/` | BoneFM pretraining pipeline based on DINOv2 |
+| `finetune/` | Fine-tuning and evaluation code for BoneFM and BoneCoT |
+| `scripts/` | 5-fold notebook templates for task-specific evaluation |
+| `BoneCoT_inference.ipynb` | Local BoneCoT inference template |
 
-## Environment
+## Quick Start
+
+### Environment
 
 Recommended setup:
 
@@ -76,9 +86,11 @@ cd pretrain
 pip install -e .
 ```
 
-## Released Checkpoint
+## BoneFM Pretrained Model Download
 
-Download the BoneFM pretrained backbone checkpoint:
+[![Download BoneFM.pth](https://img.shields.io/badge/Download-BoneFM.pth-2ea44f?style=flat-square&logo=googledrive&logoColor=white)](https://drive.google.com/uc?id=1NsiBZOx7vAYiN0IDdjYdqFkfArrW_Scn)
+
+Download the released pretrained backbone:
 
 ```sh
 pip install gdown
@@ -100,7 +112,9 @@ finetune/checkpoints/BoneFM.pth
 
 ## Inference Notebooks
 
-- [BoneCoT_inference.ipynb](BoneCoT_inference.ipynb): BoneCoT inference template
+General inference template:
+
+- [BoneCoT_inference.ipynb](BoneCoT_inference.ipynb)
 
 Task-specific 5-fold notebook templates:
 
@@ -114,7 +128,7 @@ These notebooks are templates only. They assume that you provide:
 - The released `BoneFM.pth` backbone checkpoint
 - Your own task-specific fine-tuned checkpoints when required
 
-## Running the Notebooks
+Launch Jupyter:
 
 ```sh
 cd /path/to/BoneCoT
