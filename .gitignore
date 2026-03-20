@@ -6,3 +6,12 @@
 
 # Ignore Python cache directories
 __pycache__/
+.ipynb_checkpoints/
+
+# Ignore generated outputs
+finetune_logs/
+
+# Only keep the released pretrained backbone in the default checkpoint directory
+finetune/checkpoints/*
+!finetune/checkpoints/.gitkeep
+!finetune/checkpoints/BoneFM.pth
