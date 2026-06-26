@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BoneCoT | Nature Biomedical Engineering</title>
+    <meta name="description" content="BoneCoT: multicentre validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought.">
+    <style>
+      :root {
+        --bg: #ffffff;
+        --ink: #182022;
+        --muted: #5b676b;
+        --line: #dce4e4;
+        --soft: #f5f8f7;
+        --teal: #0f766e;
+        --teal-dark: #0b4f4a;
+        --amber: #c9861a;
+        --amber-soft: #fff4df;
+        --panel: #ffffff;
+        --shadow: 0 20px 50px rgba(17, 33, 35, 0.09);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.55;
+      }
+
+      a {
+        color: var(--teal);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        border-bottom: 1px solid rgba(220, 228, 228, 0.88);
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(12px);
+      }
+
+      .nav {
+        min-height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--ink);
+        font-weight: 780;
+        letter-spacing: 0;
+      }
+
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--teal-dark);
+        background: var(--soft);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .nav-links a {
+        color: var(--muted);
+      }
+
+      .nav-links .primary {
+        padding: 9px 13px;
+        border-radius: 8px;
+        background: var(--teal);
+        color: white;
+        font-weight: 700;
+      }
+
+      .nav-links .primary:hover {
+        text-decoration: none;
+        background: var(--teal-dark);
+      }
+
+      .hero {
+        padding: 76px 0 44px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+        gap: 52px;
+        align-items: center;
+      }
+
+      .hero-grid > *,
+      .section-head > *,
+      .method-grid > *,
+      .release-grid > *,
+      .preprocess > *,
+      .image-grid > *,
+      .citation > * {
+        min-width: 0;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(42px, 7vw, 86px);
+        line-height: 0.95;
+        letter-spacing: 0;
+        max-width: 820px;
+      }
+
+      .subtitle {
+        margin: 26px 0 0;
+        max-width: 720px;
+        color: var(--muted);
+        font-size: 19px;
+      }
+
+      .meta-row {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .meta-item {
+        min-height: 82px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .meta-label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .meta-value {
+        display: block;
+        margin-top: 7px;
+        color: var(--ink);
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .actions {
+        margin-top: 28px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--ink);
+        font-size: 14px;
+        font-weight: 750;
+        background: white;
+      }
+
+      .button:hover {
+        text-decoration: none;
+        border-color: var(--teal);
+      }
+
+      .button.solid {
+        border-color: var(--teal);
+        background: var(--teal);
+        color: white;
+      }
+
+      .hero-figure {
+        margin: 0;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: white;
+        box-shadow: var(--shadow);
+      }
+
+      .hero-figure img {
+        display: block;
+        width: 100%;
+        border-radius: 6px;
+      }
+
+      .figure-caption {
+        padding: 11px 4px 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      section {
+        padding: 74px 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(0, 0.72fr) minmax(280px, 0.28fr);
+        gap: 36px;
+        align-items: end;
+        margin-bottom: 30px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: clamp(28px, 4vw, 46px);
+        line-height: 1.06;
+        letter-spacing: 0;
+      }
+
+      .section-copy {
+        margin: 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .method-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .step {
+        min-height: 190px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .step-number {
+        color: var(--amber);
+        font-weight: 850;
+        font-size: 13px;
+      }
+
+      .step h3 {
+        margin: 18px 0 9px;
+        font-size: 18px;
+        line-height: 1.18;
+      }
+
+      .step p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .band {
+        background: var(--soft);
+      }
+
+      .release-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .release-list {
+        margin: 0;
+        padding: 22px 24px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: white;
+      }
+
+      .release-list h3 {
+        margin: 0 0 14px;
+        font-size: 18px;
+      }
+
+      .release-list ul {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--muted);
+      }
+
+      .release-list li + li {
+        margin-top: 8px;
+      }
+
+      .preprocess {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(320px, 1.08fr);
+        gap: 36px;
+        align-items: start;
+      }
+
+      .spec-table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: white;
+      }
+
+      .spec-table th,
+      .spec-table td {
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        font-size: 14px;
+      }
+
+      .spec-table td,
+      .spec-table th {
+        overflow-wrap: anywhere;
+      }
+
+      .spec-table tr:last-child th,
+      .spec-table tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .spec-table th {
+        width: 38%;
+        color: var(--muted);
+        font-weight: 700;
+        background: #fbfcfc;
+      }
+
+      code,
+      pre {
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      }
+
+      pre {
+        max-width: 100%;
+        margin: 0;
+        padding: 18px;
+        overflow: auto;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: #101719;
+        color: #e8f3f1;
+        font-size: 13px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .image-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .paper-image {
+        margin: 0;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: white;
+        overflow: hidden;
+      }
+
+      .paper-image img {
+        display: block;
+        width: 100%;
+      }
+
+      .paper-image figcaption {
+        padding: 14px 16px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .paper-image.wide {
+        grid-column: 1 / -1;
+      }
+
+      .framework-figure {
+        margin-top: 18px;
+      }
+
+      .citation {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 0.36fr);
+        gap: 20px;
+        align-items: stretch;
+      }
+
+      .citation h2 {
+        margin-bottom: 18px;
+      }
+
+      .doi-panel {
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--amber-soft);
+      }
+
+      .doi-panel h3 {
+        margin: 0 0 10px;
+        font-size: 18px;
+      }
+
+      .doi-panel p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      footer {
+        padding: 34px 0;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 880px) {
+        .nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 16px 0;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .hero {
+          padding-top: 50px;
+        }
+
+        .hero-grid,
+        .section-head,
+        .preprocess,
+        .citation {
+          grid-template-columns: 1fr;
+        }
+
+        .method-grid,
+        .release-grid,
+        .image-grid,
+        .meta-row {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-figure {
+          order: -1;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .shell {
+          width: min(100% - 28px, 1120px);
+        }
+
+        h1 {
+          font-size: 44px;
+        }
+
+        .subtitle {
+          font-size: 16px;
+        }
+
+        section {
+          padding: 54px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="shell nav">
+        <a class="brand" href="#top">
+          <span class="brand-mark" aria-hidden="true">B</span>
+          <span>BoneCoT</span>
+        </a>
+        <nav class="nav-links" aria-label="Project links">
+          <a href="https://www.nature.com/articles/s41551-026-01736-1">Paper</a>
+          <a href="https://github.com/FrankZhangRp/BoneCoT">Code</a>
+          <a href="https://huggingface.co/frankzhang/BoneFM">Model</a>
+          <a href="#citation">Citation</a>
+          <a class="primary" href="https://doi.org/10.1038/s41551-026-01736-1">DOI</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="top" class="hero" aria-labelledby="hero-title">
+        <div class="shell hero-grid">
+          <div>
+            <h1 id="hero-title">BoneCoT</h1>
+            <p class="subtitle">A whole-body skeleton foundation model for bone metastases, guided by clinician-derived chain-of-thought dependencies and validated across multiple centres.</p>
+            <div class="meta-row" aria-label="Publication metadata">
+              <div class="meta-item">
+                <span class="meta-label">Journal</span>
+                <span class="meta-value">Nature Biomedical Engineering</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">DOI</span>
+                <span class="meta-value">10.1038/s41551-026-01736-1</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Model</span>
+                <span class="meta-value">BoneFM on Hugging Face</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Input focus</span>
+                <span class="meta-value">Bone-window CT, WL 300 / WW 1500</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="button solid" href="https://github.com/FrankZhangRp/BoneCoT">Open GitHub</a>
+              <a class="button" href="https://huggingface.co/frankzhang/BoneFM">Download BoneFM</a>
+              <a class="button" href="#preprocessing">Preprocessing</a>
+            </div>
+          </div>
+          <figure class="hero-figure">
+            <img src="assets/images/bonecot-fig1d-workflow.png" alt="Figure 1d workflow showing BoneCoT model training and clinician-guided reasoning inference.">
+            <figcaption class="figure-caption">Figure 1d. BoneCoT model training and clinician-guided reasoning inference.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="method">
+        <div class="shell">
+          <div class="section-head">
+            <h2>Method Overview</h2>
+            <p class="section-copy">BoneCoT separates representation learning, task-specific modelling, and clinician-derived dependency reasoning so the public release can be used as a code and model reference without exposing private clinical data.</p>
+          </div>
+          <div class="method-grid">
+            <article class="step">
+              <span class="step-number">01</span>
+              <h3>Bone-window CT input</h3>
+              <p>CT images are prepared around bone structures with WL 300 and WW 1500 before being loaded by the public inference code.</p>
+            </article>
+            <article class="step">
+              <span class="step-number">02</span>
+              <h3>BoneFM backbone</h3>
+              <p>BoneFM provides skeleton-focused visual representations for downstream bone lesion and metastasis tasks.</p>
+            </article>
+            <article class="step">
+              <span class="step-number">03</span>
+              <h3>Task-specific heads</h3>
+              <p>Local users can connect their own de-identified manifests and task checkpoints through the released configuration templates.</p>
+            </article>
+            <article class="step">
+              <span class="step-number">04</span>
+              <h3>Clinician-derived CoT</h3>
+              <p>BoneCoT uses task dependencies curated from clinical reasoning to support downstream inference for bone-related disease assessment.</p>
+            </article>
+          </div>
+          <figure class="paper-image wide framework-figure">
+            <img src="assets/images/bonecot-model-framework.png" alt="Supplementary model framework showing BoneFM inference and BoneCoT inference architecture from CT images to prediction.">
+            <figcaption>Supplementary model framework. BoneFM extracts image features from bone-window CT images; BoneCoT adds task-related hidden features before classification.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="preprocessing" class="band">
+        <div class="shell preprocess">
+          <div>
+            <h2>Bone-window preprocessing</h2>
+            <p class="section-copy">The public inference path assumes that raw CT data have already been converted into de-identified image slices. The key public convention is the bone-window normalization used before PIL loading and ImageNet-style tensor normalization.</p>
+          </div>
+          <div>
+            <table class="spec-table">
+              <tbody>
+                <tr>
+                  <th>Window level</th>
+                  <td><code>300</code></td>
+                </tr>
+                <tr>
+                  <th>Window width</th>
+                  <td><code>1500</code></td>
+                </tr>
+                <tr>
+                  <th>Mapping</th>
+                  <td><code>clip((HU - (WL - WW / 2)) / WW, 0, 1)</code></td>
+                </tr>
+                <tr>
+                  <th>Default crop</th>
+                  <td><code>518</code></td>
+                </tr>
+                <tr>
+                  <th>Model path</th>
+                  <td><code>finetune/checkpoints/BoneFM.pth</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="release">
+        <div class="shell">
+          <div class="section-head">
+            <h2>Public Release Boundary</h2>
+            <p class="section-copy">The repository is code-first. Large weights move to Hugging Face, and sensitive assets stay outside public documentation.</p>
+          </div>
+          <div class="release-grid">
+            <div class="release-list">
+              <h3>Included</h3>
+              <ul>
+                <li>BoneFM and BoneCoT model/evaluation code.</li>
+                <li>Inference notebooks with private-path placeholders.</li>
+                <li>Configuration templates for local data.</li>
+                <li>BoneFM model card for Hugging Face.</li>
+                <li>This GitHub Pages project page.</li>
+              </ul>
+            </div>
+            <div class="release-list">
+              <h3>Not included</h3>
+              <ul>
+                <li>Training, validation, or test datasets.</li>
+                <li>Patient-level clinical metadata or annotations.</li>
+                <li>Reviewer-only reproduction packages.</li>
+                <li>Internal training launch recipes and logs.</li>
+                <li>Task-specific fine-tuned checkpoints unless separately released.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="figures" class="band">
+        <div class="shell">
+          <div class="section-head">
+            <h2>Selected Figures</h2>
+            <p class="section-copy">This page intentionally shows only the core orientation artwork and the Fig. 2a-b summary panels. Additional experimental result figures are kept out of the public landing page.</p>
+          </div>
+          <div class="image-grid">
+            <figure class="paper-image">
+              <img src="assets/images/bonecot-fig1a-data.png" alt="Figure 1a showing multicentre data growth by modality from 2013 to 2023.">
+              <figcaption>Figure 1a. Multicentre data growth by modality.</figcaption>
+            </figure>
+            <figure class="paper-image">
+              <img src="assets/images/bonecot-fig1b-anatomy.png" alt="Figure 1b showing skeletal distribution across normal, primary, and metastatic cohorts.">
+              <figcaption>Figure 1b. Skeletal distribution across normal, primary, and metastatic cohorts.</figcaption>
+            </figure>
+            <figure class="paper-image wide">
+              <img src="assets/images/bonecot-fig1c-task-graph.png" alt="Figure 1c showing clinician-derived task relation graph for bone metastasis diagnosis, quality classification, tumour classification, biomarkers, and complications.">
+              <figcaption>Figure 1c. Clinician-derived task relation graph for BoneCoT reasoning.</figcaption>
+            </figure>
+            <figure class="paper-image">
+              <img src="assets/images/bonecot-fig2a-radar.png" alt="Figure 2a radar plot comparing BoneCoT with DINOv2 and Merlin across bone-related tasks.">
+              <figcaption>Figure 2a. Task-level comparison of BoneCoT, DINOv2, and Merlin.</figcaption>
+            </figure>
+            <figure class="paper-image">
+              <img src="assets/images/bonecot-fig2b-associations.png" alt="Figure 2b heatmap of Phi coefficients among bone-related diagnostic and clinical tasks.">
+              <figcaption>Figure 2b. Task association structure measured by Phi coefficients.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section id="citation">
+        <div class="shell citation">
+          <div>
+            <h2>Citation</h2>
+            <pre><code>@article{bonecot2026,
+  title = {BoneCoT: multicentre validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought},
+  journal = {Nature Biomedical Engineering},
+  year = {2026},
+  doi = {10.1038/s41551-026-01736-1}
+}</code></pre>
+          </div>
+          <aside class="doi-panel">
+            <h3>Publication</h3>
+            <p>The article is scheduled for online publication on 02 July 2026 at 10:00 London time. Use the DOI link for the final journal record once it is live.</p>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">BoneCoT is released for non-commercial research use under CC BY-NC 4.0. It is not a standalone clinical diagnostic device.</div>
+    </footer>
+  </body>
+</html>

@@ -11,7 +11,12 @@ __pycache__/
 # Ignore generated outputs
 finetune_logs/
 
-# Only keep the released pretrained backbone in the default checkpoint directory
+# Keep model weights out of GitHub; publish large checkpoints through Hugging Face.
 finetune/checkpoints/*
 !finetune/checkpoints/.gitkeep
-!finetune/checkpoints/BoneFM.pth
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+*.onnx
+*.zip

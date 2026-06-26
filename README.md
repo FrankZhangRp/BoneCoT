@@ -1,43 +1,73 @@
-# BoneCoT: Multi-center validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought
+# BoneCoT
 
-[![GitHub stars](https://img.shields.io/github/stars/FrankZhangRp/BoneCoT?style=flat-square)](https://github.com/FrankZhangRp/BoneCoT/stargazers)
-[![Python](https://img.shields.io/badge/Python-3.9-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.5.1-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org/)
-[![CUDA](https://img.shields.io/badge/CUDA-12.4-76B900?style=flat-square&logo=nvidia&logoColor=white)](https://developer.nvidia.com/cuda-toolkit)
-[![License](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey?style=flat-square)](LICENSE)
+BoneCoT: multicentre validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought.
 
-Official code release for the BoneCoT paper.
+<p align="center">
+  <a href="https://frankzhangrp.github.io/BoneCoT/"><img src="https://img.shields.io/badge/Project-Page-0f766e?style=flat-square" alt="Project Page"></a>
+  <a href="https://doi.org/10.1038/s41551-026-01736-1"><img src="https://img.shields.io/badge/DOI-10.1038%2Fs41551--026--01736--1-blue?style=flat-square" alt="DOI"></a>
+  <a href="https://huggingface.co/frankzhang/BoneFM"><img src="https://img.shields.io/badge/Hugging%20Face-BoneFM-ffcc4d?style=flat-square" alt="Hugging Face model"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey?style=flat-square" alt="License"></a>
+  <img src="https://img.shields.io/badge/Python-3.9-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/PyTorch-2.5.1-EE4C2C?style=flat-square&logo=pytorch&logoColor=white" alt="PyTorch">
+</p>
 
-This repository provides:
+Official code release for the BoneCoT paper in *Nature Biomedical Engineering*.
 
-- `BoneFM` pretraining code built on top of DINOv2
-- Fine-tuning and evaluation code for BoneFM and BoneCoT
-- Public notebook templates for downstream inference
+## News
+
+- The paper is scheduled for online publication in *Nature Biomedical Engineering* on **02 July 2026, 10:00 London time**. DOI: [10.1038/s41551-026-01736-1](https://doi.org/10.1038/s41551-026-01736-1).
+- The BoneFM backbone weights are released through [Hugging Face](https://huggingface.co/frankzhang/BoneFM), instead of being stored directly in this GitHub repository.
+- A GitHub Pages project page is available under [`docs/`](docs/) for the paper summary, model overview, and release links.
 
 ## Overview
 
-### Included in this public release
+BoneCoT is a clinician-guided chain-of-thought framework for bone metastasis and bone-related disease assessment from whole-body skeletal CT. The model is built on **BoneFM**, a skeleton-focused CT foundation backbone adapted from DINOv2-style self-supervised pretraining, and then uses clinician-derived task dependencies to support downstream bone lesion reasoning.
 
-- Source code
-- Public notebook templates
-- The released `BoneFM.pth` pretrained backbone checkpoint
+This public repository focuses on reusable code, inference templates, model-loading instructions, and release documentation. Private clinical datasets, internal training runs, non-public reproduction packages, and manuscript-revision analysis materials are not surfaced in the public README.
 
-### Not included in this public release
+## What This Repository Provides
 
-- Training, validation, or test datasets
-- Task-specific fine-tuned checkpoints
-- Review-only demo assets from the anonymous submission version
+### Included
 
-To run local evaluation, replace the placeholder paths in the notebooks or config files with your own private assets.
+- BoneFM/BoneCoT model definitions and evaluation utilities.
+- Public inference notebook templates for local data.
+- Configuration templates with placeholder paths for private user assets.
+- A Hugging Face model card under [`huggingface/README.md`](huggingface/README.md).
+- A GitHub Pages project page under [`docs/`](docs/).
+
+### Not Included
+
+- Training, validation, or test datasets.
+- Private clinical annotations or patient-level metadata.
+- Task-specific fine-tuned checkpoints unless separately released.
+- Non-public reproduction packages and release-preparation assets.
+- Internal training recipes, ablation scripts, and manuscript-revision analysis pipelines.
+
+## CT Input Convention
+
+BoneFM and BoneCoT operate on bone-window CT image slices. For local inference, prepare input images from CT HU values using the following public preprocessing convention:
+
+| Item | Value |
+| --- | --- |
+| Window level | `300` |
+| Window width | `1500` |
+| Intensity mapping | `clip((HU - (WL - WW / 2)) / WW, 0, 1)` |
+| Image format | 2D RGB-compatible image files loaded by PIL |
+| Default crop size | `518` |
+| Normalization | ImageNet mean/std in the released evaluation transforms |
+
+The repository expects already prepared image files in the CSV manifests. Raw DICOM/NIfTI conversion, private de-identification, and cohort curation are intentionally outside the public release.
 
 ## Repository Structure
 
 | Path | Description |
 | --- | --- |
-| `pretrain/` | BoneFM pretraining pipeline based on DINOv2 |
-| `finetune/` | Fine-tuning and evaluation code for BoneFM and BoneCoT |
-| `scripts/` | 5-fold notebook templates for task-specific evaluation |
-| `BoneCoT_inference.ipynb` | Local BoneCoT inference template |
+| `finetune/` | BoneFM and BoneCoT model definitions, evaluators, configs, and metrics |
+| `scripts/` | Task-specific inference notebook templates |
+| `BoneCoT_inference.ipynb` | General local inference template |
+| `pretrain/` | BoneFM/DINOv2 implementation reference; public README omits internal training commands |
+| `huggingface/` | Model-card README for the Hugging Face BoneFM repository |
+| `docs/` | Static GitHub Pages project page |
 
 ## Quick Start
 
@@ -46,7 +76,7 @@ To run local evaluation, replace the placeholder paths in the notebooks or confi
 Recommended setup:
 
 - OS: Ubuntu 22.04
-- GPU: NVIDIA GPU with >=24 GB VRAM
+- GPU: NVIDIA GPU with at least 24 GB VRAM
 - CUDA: 12.4
 - Python: 3.9
 - Conda: Anaconda or Miniconda
@@ -77,46 +107,46 @@ Install project dependencies:
 pip install -r requirements.txt
 ```
 
-Optional: install the DINOv2 pretraining environment:
+## BoneFM Backbone Weights
+
+The recommended public distribution path is Hugging Face:
 
 ```sh
-conda env create -f pretrain/conda.yaml
-conda activate dinov2_new
-cd pretrain
-pip install -e .
+hf download frankzhang/BoneFM BoneFM.pth --local-dir finetune/checkpoints
 ```
 
-## BoneFM Pretrained Model Download
-
-[![Download BoneFM.pth](https://img.shields.io/badge/Download-BoneFM.pth-2ea44f?style=flat-square&logo=googledrive&logoColor=white)](https://drive.google.com/uc?id=1NsiBZOx7vAYiN0IDdjYdqFkfArrW_Scn)
-
-Download the released pretrained backbone:
-
-```sh
-pip install gdown
-gdown "1NsiBZOx7vAYiN0IDdjYdqFkfArrW_Scn" -O BoneFM.pth
-```
-
-Place it in the default location:
-
-```sh
-mkdir -p finetune/checkpoints
-cp BoneFM.pth finetune/checkpoints/
-```
-
-Expected path:
+Expected local path:
 
 ```text
 finetune/checkpoints/BoneFM.pth
 ```
 
-## Inference Notebooks
+Checkpoint integrity:
+
+- Size: `4,946,789,774` bytes
+- SHA256: `5bed7f117e4f8a9f3b11eded0408e9ba60ee0bf3c3b335982d6b9e608c69d271`
+
+Python alternative:
+
+```python
+from huggingface_hub import hf_hub_download
+
+hf_hub_download(
+    repo_id="frankzhang/BoneFM",
+    filename="BoneFM.pth",
+    local_dir="finetune/checkpoints",
+)
+```
+
+GitHub is kept code-focused. Large model files should remain on Hugging Face or another model registry rather than being committed to this repository.
+
+## Inference Templates
 
 General inference template:
 
 - [BoneCoT_inference.ipynb](BoneCoT_inference.ipynb)
 
-Task-specific 5-fold notebook templates:
+Task-specific templates:
 
 - [scripts/Task1_bone_lesion_inference.ipynb](scripts/Task1_bone_lesion_inference.ipynb)
 - [scripts/Task2_benign_or_malignant_inference.ipynb](scripts/Task2_benign_or_malignant_inference.ipynb)
@@ -124,19 +154,35 @@ Task-specific 5-fold notebook templates:
 
 These notebooks are templates only. They assume that you provide:
 
-- A local CSV file describing your private dataset
-- The released `BoneFM.pth` backbone checkpoint
-- Your own task-specific fine-tuned checkpoints when required
+- A CSV manifest for your local, de-identified image files.
+- The released `BoneFM.pth` backbone checkpoint.
+- Task-specific classifier checkpoints if you are running a task that requires them.
 
 Launch Jupyter:
 
 ```sh
-cd /path/to/BoneCoT
 conda activate bonecot
 jupyter notebook
 ```
 
 Open the desired notebook and update the private local paths in the configuration cell before running the remaining cells.
+
+## Clinical and Research Use
+
+This repository is intended for research use. BoneCoT is not a standalone clinical diagnostic device, and model outputs should not be used for patient management without local validation, regulatory review, and qualified clinical oversight.
+
+## Citation
+
+Please cite the final *Nature Biomedical Engineering* record once it is live:
+
+```bibtex
+@article{bonecot2026,
+  title = {BoneCoT: multicentre validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought},
+  journal = {Nature Biomedical Engineering},
+  year = {2026},
+  doi = {10.1038/s41551-026-01736-1}
+}
+```
 
 ## License
 

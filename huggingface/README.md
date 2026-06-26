@@ -16,23 +16,24 @@ tags:
 - bone-disease
 ---
 
-# BoneFM Model Card
+# BoneFM
 
 BoneFM is the skeleton-focused CT foundation backbone used by **BoneCoT: multicentre validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought**.
 
 - Paper DOI: [10.1038/s41551-026-01736-1](https://doi.org/10.1038/s41551-026-01736-1)
-- Code repository: [FrankZhangRp/BoneCoT](https://github.com/FrankZhangRp/BoneCoT)
-- Model repository: [frankzhang/BoneFM](https://huggingface.co/frankzhang/BoneFM)
+- Code: [FrankZhangRp/BoneCoT](https://github.com/FrankZhangRp/BoneCoT)
+- Project page: [frankzhangrp.github.io/BoneCoT](https://frankzhangrp.github.io/BoneCoT/)
 
 ## Model Summary
 
 BoneFM is a Vision Transformer backbone adapted from DINOv2-style self-supervised learning for skeleton-focused CT representation. BoneCoT uses BoneFM features and clinician-derived task dependencies for downstream bone metastasis and bone-related disease reasoning.
 
-The released Hugging Face checkpoint file is:
+This repository hosts the public BoneFM backbone checkpoint:
 
 | File | Description |
 | --- | --- |
 | `BoneFM.pth` | BoneFM pretrained backbone checkpoint for the BoneCoT public code |
+| `README.md` | Hugging Face model card |
 
 Checkpoint integrity:
 
@@ -57,7 +58,7 @@ image = clip((HU - (WL - WW / 2)) / WW, 0, 1)
 
 The public code expects PIL-readable RGB-compatible image files and applies the evaluation transforms defined in the BoneCoT repository.
 
-## Loading
+## Download
 
 Download the released checkpoint:
 
@@ -65,22 +66,28 @@ Download the released checkpoint:
 hf download frankzhang/BoneFM BoneFM.pth --local-dir finetune/checkpoints
 ```
 
-Expected local path:
+Python alternative:
+
+```python
+from huggingface_hub import hf_hub_download
+
+path = hf_hub_download(
+    repo_id="frankzhang/BoneFM",
+    filename="BoneFM.pth",
+    local_dir="finetune/checkpoints",
+)
+print(path)
+```
+
+The expected local path for the BoneCoT repository is:
 
 ```text
 finetune/checkpoints/BoneFM.pth
 ```
 
-The released evaluators load this file through:
-
-```yaml
-model:
-  backbone_ckpt_path: finetune/checkpoints/BoneFM.pth
-```
-
 ## Public Release Boundary
 
-This public model release does not include:
+This model repository is for the BoneFM backbone checkpoint and model card. It does not include:
 
 - Private clinical training, validation, or test datasets.
 - Patient-level metadata.
@@ -89,6 +96,8 @@ This public model release does not include:
 - Task-specific fine-tuned checkpoints unless separately released.
 
 ## Citation
+
+Please cite the final *Nature Biomedical Engineering* record once it is live:
 
 ```bibtex
 @article{bonecot2026,
