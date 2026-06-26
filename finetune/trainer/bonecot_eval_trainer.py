@@ -6,6 +6,7 @@ from ..data import BoneCoT_Inference_Dataset
 import os
 import numpy as np
 from tqdm import tqdm
+import traceback
 
 class BoneCoT_Eval_Trainer(BaseTrainer):
     def __init__(self, args):
@@ -55,26 +56,28 @@ class BoneCoT_Eval_Trainer(BaseTrainer):
         self.relative_model_config = {}
         # 读取对应每个relative_task的ckpt的
         for task_name in self.args.model.relative_task:
-            if os.path.exists(self.args.model.model_ckpt_dict[task_name]):
-                task_ckpt_dict = torch.load(self.args.model.model_ckpt_dict[task_name], map_location='cpu', weights_only=False)
-                if 'model' in task_ckpt_dict.keys():
-                    self.relative_ckpt_dict[task_name] = task_ckpt_dict['model']
-                else:
-                    self.relative_ckpt_dict[task_name] = {}
-                    for key in task_ckpt_dict.keys():
-                        if '.linear.' in key:
-                            self.relative_ckpt_dict[task_name][key.replace('.linear', '')] = task_ckpt_dict[key]
-                print(f"Use relative model for inference: {task_name}")
-                self.relative_model_config[task_name] = {
-                    'extra_token_num': (self.relative_ckpt_dict[task_name]['linear_classifier_1.weight'].shape[1]//1536) - 5,
-                    'use_n_blocks': 4,
-                    'embed_dim': self.embed_dim,
-                    'use_avgpool': True,
-                    'num_classes': 1
-                }
-                if task_name == 'type_of_primary_tumor':
-                    self.relative_model_config[task_name]['num_classes'] = 9
-                self.relative_model_dict[task_name] = build_bonecot_relative_model(self.backbone_model, **self.relative_model_config[task_name])
+            ckpt_path = self.args.model.model_ckpt_dict[task_name]
+            if not os.path.exists(ckpt_path):
+                raise FileNotFoundError(f"Missing relative model checkpoint for {task_name}: {ckpt_path}")
+            task_ckpt_dict = torch.load(ckpt_path, map_location='cpu', weights_only=False)
+            if 'model' in task_ckpt_dict.keys():
+                self.relative_ckpt_dict[task_name] = task_ckpt_dict['model']
+            else:
+                self.relative_ckpt_dict[task_name] = {}
+                for key in task_ckpt_dict.keys():
+                    if '.linear.' in key:
+                        self.relative_ckpt_dict[task_name][key.replace('.linear', '')] = task_ckpt_dict[key]
+            print(f"Use relative model for inference: {task_name}")
+            self.relative_model_config[task_name] = {
+                'extra_token_num': (self.relative_ckpt_dict[task_name]['linear_classifier_1.weight'].shape[1]//1536) - 5,
+                'use_n_blocks': 4,
+                'embed_dim': self.embed_dim,
+                'use_avgpool': True,
+                'num_classes': 1
+            }
+            if task_name == 'type_of_primary_tumor':
+                self.relative_model_config[task_name]['num_classes'] = 9
+            self.relative_model_dict[task_name] = build_bonecot_relative_model(self.backbone_model, **self.relative_model_config[task_name])
         self.logger.info(f"Use relative model for inference: {self.relative_model_dict.keys()}")
     
     # can change the checkpoint path here
@@ -97,6 +100,7 @@ class BoneCoT_Eval_Trainer(BaseTrainer):
             self.logger.error(f"Failed to load pretrained model from {self.args.model.backbone_ckpt_path}")
             self.logger.error(f"Exception: {e}")
             self.logger.error(traceback.format_exc())
+            raise
         self.logger.info(f"Load backbone checkpoint from {self.args.model.backbone_ckpt_path}")
         self.main_task_ckpt = torch.load(self.args.model.model_ckpt_dict[self.args.model.main_task], map_location='cpu', weights_only=False)
         if 'model' in self.main_task_ckpt.keys():
@@ -146,6 +150,8 @@ class BoneCoT_Eval_Trainer(BaseTrainer):
                 'osteoblastic': 2,
                 'pathological_fracture': 3,
             }
+        else:
+            raise ValueError(f"Unsupported BoneCoT main_task for multi-round inference: {self.args.model.main_task}")
         val_results_dict = {key_name: {} for key_name in self.relative_model_dict.keys()}
         val_results_dict[self.args.model.main_task] = {}
         dataloader = self.dataloaders_dict[split]
@@ -198,7 +204,7 @@ class BoneCoT_Eval_Trainer(BaseTrainer):
                     total_hidden_feature[i*self.batch_size:i*self.batch_size+real_batch_size, 0] = hidden_features.detach().cpu().numpy()
                     if len(data_dict) == 5:
                         for j in range(len(study_series_names)):
-                            study_id, series_id = study_series_names[j].split('_')
+                            study_id, series_id = study_series_names[j].split('_', 1)
                             if study_id not in val_results_dict[self.args.model.main_task].keys():
                                 val_results_dict[self.args.model.main_task][study_id] = {}
                             if series_id not in val_results_dict[self.args.model.main_task][study_id].keys():
@@ -232,13 +238,17 @@ class BoneCoT_Eval_Trainer(BaseTrainer):
                         total_hidden_feature[i*self.batch_size:i*self.batch_size+real_batch_size, j+1] = hidden_features.detach().cpu().numpy()        
                         
                         if len(data_dict) == 5:
-                            for j in range(len(study_series_names)):
-                                study_id, series_id = study_series_names[j].split('_')
+                            for sample_idx in range(len(study_series_names)):
+                                study_id, series_id = study_series_names[sample_idx].split('_', 1)
                                 if study_id not in val_results_dict[model_name].keys():
                                     val_results_dict[model_name][study_id] = {}
                                 if series_id not in val_results_dict[model_name][study_id].keys():
                                     val_results_dict[model_name][study_id][series_id] = {}                        
-                                val_results_dict[model_name][study_id][series_id][image_name[j]] = {'pred': preds[j].cpu().numpy(), 'outputs': outputs[j].cpu().numpy(), 'hidden_features': hidden_features[j].cpu().numpy()} 
+                                val_results_dict[model_name][study_id][series_id][image_name[sample_idx]] = {
+                                    'pred': preds[sample_idx].cpu().numpy(),
+                                    'outputs': outputs[sample_idx].cpu().numpy(),
+                                    'hidden_features': hidden_features[sample_idx].cpu().numpy(),
+                                }
                 pbar.update(1)
             
         save_file_name = os.path.join(self.pred_save_dir, f'{split}_epoch_{n_epoch}.npz')

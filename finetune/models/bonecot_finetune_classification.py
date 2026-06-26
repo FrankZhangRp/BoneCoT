@@ -230,7 +230,9 @@ class BoneCoT_MultiRound_InferenceClassification(BoneCoT_TwoLinearClassification
         if extra_hidden_features is not None:
             extra_token_features = extra_hidden_features
         elif self.extra_token_num > 0:
-            extra_token_features = torch.zeros_like(self.embed_dim * self.extra_token_num).to(images.device)
+            extra_token_features = img_features.new_zeros(
+                (img_features.shape[0], self.extra_token_num * self.embed_dim)
+            )
         if self.extra_token_num > 0:
             hidden = self.linear_classifier_1(torch.cat([img_features, extra_token_features], dim=-1))
         else:
