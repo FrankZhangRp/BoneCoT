@@ -1,6 +1,6 @@
 # BoneCoT
 
-BoneCoT: multicentre validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought.
+BoneCoT: Multi-center validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought.
 
 <p align="center">
   <a href="https://frankzhangrp.github.io/BoneCoT/"><img src="https://img.shields.io/badge/Project-Page-0f766e?style=flat-square" alt="Project Page"></a>
@@ -13,6 +13,19 @@ BoneCoT: multicentre validation of a whole-body skeleton foundation model for bo
 
 Official code release for the BoneCoT paper in *Nature Biomedical Engineering*.
 
+## Authors
+
+Hui Zhao<sup>1,*,#</sup>, Ruipeng Zhang<sup>2,*</sup>, Zhiyu Wang<sup>1,*</sup>, Yifeng Gu<sup>2</sup>, Shengyuan Xu<sup>3</sup>, Sheng Wang<sup>4,#</sup>, Yuehua Li<sup>2,#</sup>
+
+1. Metastatic Bone Tumor Clinical Center, Shanghai Sixth People's Hospital Affiliated to Shanghai Jiao Tong University School of Medicine, Shanghai, China
+2. Institute of Diagnostic and Interventional Radiology, Shanghai Sixth People's Hospital Affiliated to Shanghai Jiao Tong University School of Medicine, Shanghai, China
+3. Mailman School of Public Health, Columbia University, New York, NY, USA
+4. Paul G. Allen School of Computer Science and Engineering, University of Washington, Seattle, WA, USA
+
+<sup>*</sup>These authors contributed equally: Hui Zhao, Ruipeng Zhang, Zhiyu Wang
+
+<sup>#</sup>Email: zhao-hui@sjtu.edu.cn; swang@cs.washington.edu; liyuehua77@sjtu.edu.cn
+
 ## News
 
 - The paper is scheduled for online publication in *Nature Biomedical Engineering* on **02 July 2026, 10:00 London time**. DOI: [10.1038/s41551-026-01736-1](https://doi.org/10.1038/s41551-026-01736-1).
@@ -21,7 +34,7 @@ Official code release for the BoneCoT paper in *Nature Biomedical Engineering*.
 
 ## Overview
 
-BoneCoT is a clinician-guided chain-of-thought framework for bone metastasis and bone-related disease assessment from whole-body skeletal CT. The model is built on **BoneFM**, a skeleton-focused CT foundation backbone adapted from DINOv2-style self-supervised pretraining, and then uses clinician-derived task dependencies to support downstream bone lesion reasoning.
+BoneCoT is a clinician-guided chain of thought framework for bone metastasis and bone-related disease assessment from whole-body skeletal CT. The model is built on **BoneFM**, a skeleton-focused CT foundation backbone adapted from DINOv2-style self-supervised pretraining, and then uses clinician-derived task dependencies to support downstream bone lesion reasoning.
 
 This public repository focuses on reusable code, inference templates, model-loading instructions, and release documentation. Private clinical datasets, internal training runs, non-public reproduction packages, and manuscript-revision analysis materials are not surfaced in the public README.
 
@@ -177,7 +190,8 @@ Please cite the final *Nature Biomedical Engineering* record once it is live:
 
 ```bibtex
 @article{bonecot2026,
-  title = {BoneCoT: multicentre validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought},
+  title = {BoneCoT: Multi-center validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought},
+  author = {Zhao, Hui and Zhang, Ruipeng and Wang, Zhiyu and Gu, Yifeng and Xu, Shengyuan and Wang, Sheng and Li, Yuehua},
   journal = {Nature Biomedical Engineering},
   year = {2026},
   doi = {10.1038/s41551-026-01736-1}

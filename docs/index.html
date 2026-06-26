@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>BoneCoT | Nature Biomedical Engineering</title>
-    <meta name="description" content="BoneCoT: multicentre validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought.">
+    <meta name="description" content="BoneCoT: Multi-center validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought.">
     <style>
       :root {
         --bg: #ffffff;
@@ -146,6 +146,33 @@
         max-width: 720px;
         color: var(--muted);
         font-size: 19px;
+      }
+
+      .author-summary {
+        margin-top: 20px;
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .author-list {
+        margin: 0;
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 720;
+      }
+
+      .affiliation-list {
+        margin: 12px 0 0;
+        padding-left: 20px;
+      }
+
+      .affiliation-list li {
+        margin: 4px 0;
+      }
+
+      .note-line {
+        margin: 8px 0 0;
       }
 
       .meta-row {
@@ -529,7 +556,18 @@
         <div class="shell hero-grid">
           <div>
             <h1 id="hero-title">BoneCoT</h1>
-            <p class="subtitle">A whole-body skeleton foundation model for bone metastases, guided by clinician-derived chain-of-thought dependencies and validated across multiple centres.</p>
+            <p class="subtitle">A whole-body skeleton foundation model for bone metastases, guided by clinician-derived chain of thought and validated across multiple centers.</p>
+            <div class="author-summary" aria-label="Authors and affiliations">
+              <p class="author-list">Hui Zhao<sup>1,*,#</sup>, Ruipeng Zhang<sup>2,*</sup>, Zhiyu Wang<sup>1,*</sup>, Yifeng Gu<sup>2</sup>, Shengyuan Xu<sup>3</sup>, Sheng Wang<sup>4,#</sup>, Yuehua Li<sup>2,#</sup></p>
+              <ol class="affiliation-list">
+                <li>Metastatic Bone Tumor Clinical Center, Shanghai Sixth People's Hospital Affiliated to Shanghai Jiao Tong University School of Medicine, Shanghai, China</li>
+                <li>Institute of Diagnostic and Interventional Radiology, Shanghai Sixth People's Hospital Affiliated to Shanghai Jiao Tong University School of Medicine, Shanghai, China</li>
+                <li>Mailman School of Public Health, Columbia University, New York, NY, USA</li>
+                <li>Paul G. Allen School of Computer Science and Engineering, University of Washington, Seattle, WA, USA</li>
+              </ol>
+              <p class="note-line"><sup>*</sup>These authors contributed equally: Hui Zhao, Ruipeng Zhang, Zhiyu Wang</p>
+              <p class="note-line"><sup>#</sup>Email: <a href="mailto:zhao-hui@sjtu.edu.cn">zhao-hui@sjtu.edu.cn</a>; <a href="mailto:swang@cs.washington.edu">swang@cs.washington.edu</a>; <a href="mailto:liyuehua77@sjtu.edu.cn">liyuehua77@sjtu.edu.cn</a></p>
+            </div>
             <div class="meta-row" aria-label="Publication metadata">
               <div class="meta-item">
                 <span class="meta-label">Journal</span>
@@ -670,8 +708,8 @@
           </div>
           <div class="image-grid">
             <figure class="paper-image">
-              <img src="assets/images/bonecot-fig1a-data.png" alt="Figure 1a showing multicentre data growth by modality from 2013 to 2023.">
-              <figcaption>Figure 1a. Multicentre data growth by modality.</figcaption>
+              <img src="assets/images/bonecot-fig1a-data.png" alt="Figure 1a showing multi-center data growth by modality from 2013 to 2023.">
+              <figcaption>Figure 1a. Multi-center data growth by modality.</figcaption>
             </figure>
             <figure class="paper-image">
               <img src="assets/images/bonecot-fig1b-anatomy.png" alt="Figure 1b showing skeletal distribution across normal, primary, and metastatic cohorts.">
@@ -698,7 +736,8 @@
           <div>
             <h2>Citation</h2>
             <pre><code>@article{bonecot2026,
-  title = {BoneCoT: multicentre validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought},
+  title = {BoneCoT: Multi-center validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought},
+  author = {Zhao, Hui and Zhang, Ruipeng and Wang, Zhiyu and Gu, Yifeng and Xu, Shengyuan and Wang, Sheng and Li, Yuehua},
   journal = {Nature Biomedical Engineering},
   year = {2026},
   doi = {10.1038/s41551-026-01736-1}

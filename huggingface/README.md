@@ -18,11 +18,24 @@ tags:
 
 # BoneFM
 
-BoneFM is the skeleton-focused CT foundation backbone used by **BoneCoT: multicentre validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought**.
+BoneFM is the skeleton-focused CT foundation backbone used by **BoneCoT: Multi-center validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought**.
 
 - Paper DOI: [10.1038/s41551-026-01736-1](https://doi.org/10.1038/s41551-026-01736-1)
 - Code: [FrankZhangRp/BoneCoT](https://github.com/FrankZhangRp/BoneCoT)
 - Project page: [frankzhangrp.github.io/BoneCoT](https://frankzhangrp.github.io/BoneCoT/)
+
+## Paper and Authors
+
+Hui Zhao<sup>1,*,#</sup>, Ruipeng Zhang<sup>2,*</sup>, Zhiyu Wang<sup>1,*</sup>, Yifeng Gu<sup>2</sup>, Shengyuan Xu<sup>3</sup>, Sheng Wang<sup>4,#</sup>, Yuehua Li<sup>2,#</sup>
+
+1. Metastatic Bone Tumor Clinical Center, Shanghai Sixth People's Hospital Affiliated to Shanghai Jiao Tong University School of Medicine, Shanghai, China
+2. Institute of Diagnostic and Interventional Radiology, Shanghai Sixth People's Hospital Affiliated to Shanghai Jiao Tong University School of Medicine, Shanghai, China
+3. Mailman School of Public Health, Columbia University, New York, NY, USA
+4. Paul G. Allen School of Computer Science and Engineering, University of Washington, Seattle, WA, USA
+
+<sup>*</sup>These authors contributed equally: Hui Zhao, Ruipeng Zhang, Zhiyu Wang
+
+<sup>#</sup>Email: zhao-hui@sjtu.edu.cn; swang@cs.washington.edu; liyuehua77@sjtu.edu.cn
 
 ## Model Summary
 
@@ -101,7 +114,8 @@ Please cite the final *Nature Biomedical Engineering* record once it is live:
 
 ```bibtex
 @article{bonecot2026,
-  title = {BoneCoT: multicentre validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought},
+  title = {BoneCoT: Multi-center validation of a whole-body skeleton foundation model for bone metastases guided by clinician-derived chain of thought},
+  author = {Zhao, Hui and Zhang, Ruipeng and Wang, Zhiyu and Gu, Yifeng and Xu, Shengyuan and Wang, Sheng and Li, Yuehua},
   journal = {Nature Biomedical Engineering},
   year = {2026},
   doi = {10.1038/s41551-026-01736-1}
